@@ -64,6 +64,9 @@
 							<include>org.mineacademy:foundation-bukkit*</include>
 							<include>org.mineacademy:minebridge-core*</include>
 							<include>org.java-websocket:Java-WebSocket</include>
+							<include>com.google.code.gson:gson</include>
+							<include>org.slf4j:slf4j-api</include>
+							<include>org.slf4j:slf4j-simple</include>
 						</includes>
 					</artifactSet>
 					<relocations>
@@ -91,6 +94,24 @@
                                 <exclude>META-INF/MANIFEST.MF</exclude>
                         	</excludes>
                         </filter>
+						<filter>
+							<artifact>com.google.code.gson:gson</artifact>
+							<excludes>
+								<exclude>META-INF/MANIFEST.MF</exclude>
+							</excludes>
+						</filter>
+						<filter>
+							<artifact>org.slf4j:slf4j-api</artifact>
+							<excludes>
+								<exclude>META-INF/MANIFEST.MF</exclude>
+							</excludes>
+						</filter>
+						<filter>
+							<artifact>org.slf4j:slf4j-simple</artifact>
+							<excludes>
+								<exclude>META-INF/MANIFEST.MF</exclude>
+							</excludes>
+						</filter>
                     </filters>
 				</configuration>
 			</plugin>
