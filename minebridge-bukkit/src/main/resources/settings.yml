@@ -5,6 +5,6 @@
 # Do not fear enabling this otherwise you will miss out and then waste time reading our Wiki and
 # opening tickets where things could easily be explained simply by reading the console.
 #
-# Available: websocket, proxy
+# Available: websocket
 # -------------------------------------------------------------------------------------------------
 Debug: []
