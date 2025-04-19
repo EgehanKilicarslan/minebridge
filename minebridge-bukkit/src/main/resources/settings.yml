@@ -1,3 +1,5 @@
+Server_Type: Bukkit
+
 # -------------------------------------------------------------------------------------------------
 # A list of parts of the plugin that will print log messages. Useful to see what the plugin does
 # and solve issues.
