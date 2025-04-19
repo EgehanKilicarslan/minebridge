@@ -4,6 +4,8 @@ import java.net.URI;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.mineacademy.fo.CommonCore;
+import org.mineacademy.fo.debug.Debugger;
 
 import com.google.gson.JsonObject;
 
@@ -25,22 +27,22 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
-        System.out.println("Opened connection");
+        Debugger.debug("websocket", "Opened connection to server: " + getURI());
         this.authenticate(serverType, password, server_list);
     }
 
     @Override
     public void onMessage(String message) {
-        System.out.println("Received message: " + message);
+        Debugger.debug("websocket", "Received message: " + message);
 
         if (!actionHandler.handleMessage(message)) {
-            System.out.println("No handler found for message: " + message);
+            Debugger.debug("websocket", "No handler found for message: " + message);
         }
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("Closed connection: " + reason);
+        Debugger.debug("websocket", "Closed connection: " + reason);
 
         // Create a new thread to handle reconnection attempts
         new Thread(() -> {
@@ -51,7 +53,7 @@ public class Client extends WebSocketClient {
             while (!reconnected) {
                 try {
                     attemptCount++;
-                    System.out.println("Attempting to reconnect... (Attempt " + attemptCount + ")");
+                    Debugger.debug("websocket", "Attempting to reconnect... (Attempt " + attemptCount + ")");
 
                     // Wait 30 seconds before attempting reconnection
                     Thread.sleep(30000);
@@ -60,17 +62,17 @@ public class Client extends WebSocketClient {
                     reconnected = Client.this.reconnectBlocking();
 
                     if (reconnected) {
-                        System.out.println("Successfully reconnected after " + attemptCount + " attempts.");
+                        Debugger.debug("websocket", "Reconnected successfully after " + attemptCount + " attempts.");
                     } else {
-                        System.out.println(
+                        Debugger.debug("websocket",
                                 "Reconnection attempt " + attemptCount + " failed. Trying again in 30 seconds...");
                     }
                 } catch (InterruptedException e) {
-                    System.err.println("Reconnection attempt interrupted: " + e.getMessage());
+                    CommonCore.error(e, "Reconnection attempt interrupted: " + e.getMessage());
                     Thread.currentThread().interrupt();
                     break;
                 } catch (Exception e) {
-                    System.err.println(
+                    Debugger.debug("websocket",
                             "Error during reconnection attempt: " + e.getMessage() + ". Trying again in 30 seconds...");
                 }
             }
@@ -79,7 +81,7 @@ public class Client extends WebSocketClient {
 
     @Override
     public void onError(Exception ex) {
-        System.out.println("Error: " + ex.getMessage());
+        CommonCore.error(ex, "WebSocket error: " + ex.getMessage());
     }
 
     public void authenticate(String serverType, String password, String server_list) {

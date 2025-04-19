@@ -1,5 +1,6 @@
 package org.mineacademy.minebridge.actions;
 
+import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.minebridge.annotation.WebSocketAction;
 import org.mineacademy.minebridge.implementations.WebSocketAware;
 import org.mineacademy.minebridge.schemas.TestSchema;
@@ -16,7 +17,7 @@ public class TestActionHandler implements WebSocketAware {
 
     @WebSocketAction(value = "test", schema = TestSchema.class)
     public void handleMessage(TestSchema schema) {
-        System.out.println("Got: " + schema.getText());
+        Debugger.debug("websocket", "Received message: " + schema.getText());
 
         // Now you can use the client to send responses
         if (client != null) {

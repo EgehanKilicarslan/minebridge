@@ -1,0 +1,10 @@
+# -------------------------------------------------------------------------------------------------
+# A list of parts of the plugin that will print log messages. Useful to see what the plugin does
+# and solve issues.
+#
+# Do not fear enabling this otherwise you will miss out and then waste time reading our Wiki and
+# opening tickets where things could easily be explained simply by reading the console.
+#
+# Available: websocket, proxy
+# -------------------------------------------------------------------------------------------------
+Debug: []
