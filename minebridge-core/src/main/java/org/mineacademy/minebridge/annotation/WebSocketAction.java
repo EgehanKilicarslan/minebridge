@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.mineacademy.minebridge.schema.BaseSchema;
+import org.mineacademy.minebridge.schemas.BaseSchema;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

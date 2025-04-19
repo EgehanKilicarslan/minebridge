@@ -5,7 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.mineacademy.minebridge.annotation.WebSocketAction;
-import org.mineacademy.minebridge.schema.BaseSchema;
+import org.mineacademy.minebridge.implementations.WebSocketAware;
+import org.mineacademy.minebridge.schemas.BaseSchema;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -16,6 +17,17 @@ public class WebSocketActionHandler {
 
     private final Map<String, ActionMethod> actionMethods = new HashMap<>();
     private static final Gson gson = new Gson();
+    private Client client; // Add reference to the client
+
+    // Add setter for client
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    // Add getter for client
+    public Client getClient() {
+        return client;
+    }
 
     public void registerClass(Object instance) {
         Class<?> clazz = instance.getClass();
@@ -28,6 +40,11 @@ public class WebSocketActionHandler {
                 Class<? extends BaseSchema> schemaClass = annotation.schema();
 
                 actionMethods.put(action, new ActionMethod(instance, method, schemaClass));
+
+                // If instance is WebSocketAware, pass client reference
+                if (instance instanceof WebSocketAware) {
+                    ((WebSocketAware) instance).setClient(client);
+                }
             }
         }
     }

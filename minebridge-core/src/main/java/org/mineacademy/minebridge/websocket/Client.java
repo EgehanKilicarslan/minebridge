@@ -17,6 +17,7 @@ public class Client extends WebSocketClient {
     public Client(URI serverUri, String serverType, String password, String server_list) {
         super(serverUri);
         this.actionHandler = new WebSocketActionHandler();
+        this.actionHandler.setClient(this); // Set client in action handler
         this.serverType = serverType;
         this.password = password;
         this.server_list = server_list;

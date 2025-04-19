@@ -4,8 +4,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.mineacademy.fo.platform.BukkitPlugin;
+import org.mineacademy.minebridge.actions.TestActionHandler;
 import org.mineacademy.minebridge.websocket.Client;
-import org.mineacademy.minebridge.websocket.TestActionHandler;
 
 public final class MineBridgeBukkit extends BukkitPlugin {
 

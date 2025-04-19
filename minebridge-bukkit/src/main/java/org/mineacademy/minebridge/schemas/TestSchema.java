@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.schema;
+package org.mineacademy.minebridge.schemas;
 
 import lombok.Getter;
 

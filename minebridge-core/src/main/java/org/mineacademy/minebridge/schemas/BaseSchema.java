@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.schema;
+package org.mineacademy.minebridge.schemas;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
