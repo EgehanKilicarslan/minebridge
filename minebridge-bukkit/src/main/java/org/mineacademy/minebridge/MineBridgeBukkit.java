@@ -1,16 +1,26 @@
 package org.mineacademy.minebridge;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Properties;
 
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.platform.BukkitPlugin;
 import org.mineacademy.minebridge.actions.TestActionHandler;
 import org.mineacademy.minebridge.websocket.Client;
 
+import lombok.Getter;
+
 public final class MineBridgeBukkit extends BukkitPlugin {
 
 	private Client webSocketClient;
+
+	@Getter
+	private String serverName;
 
 	@Override
 	public String[] getStartupLogo() {
@@ -26,10 +36,16 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 	}
 
 	@Override
+	protected void onPluginPreStart() {
+		parseServerName();
+	}
+
+	@Override
 	protected void onPluginStart() {
 		try {
 			// Create WebSocket client
-			webSocketClient = new Client(new URI("ws://localhost:8080"), "bukkit", "MineAcademy", null);
+			webSocketClient = new Client(new URI("ws://localhost:8080"), "MineAcademy",
+					new String[] { serverName });
 
 			// Register handler classes with WebSocketAction annotations
 			webSocketClient.registerActionHandler(new TestActionHandler());
@@ -50,5 +66,24 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 			webSocketClient.close();
 			Common.log("Client connection closed");
 		}
+	}
+
+	private void parseServerName() {
+		final File serverProperties = new File("server.properties");
+		final Properties properties = new Properties();
+
+		try {
+			properties.load(new FileInputStream(serverProperties));
+		} catch (final IOException ex) {
+			ex.printStackTrace();
+		}
+
+		final String serverName = properties.getProperty("server-name");
+
+		if (serverName == null || serverName.isEmpty()) {
+			Common.throwError(new FoException("Server name not found in server.properties"));
+		}
+
+		this.serverName = serverName;
 	}
 }

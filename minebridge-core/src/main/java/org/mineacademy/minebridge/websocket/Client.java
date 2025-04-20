@@ -12,15 +12,13 @@ import com.google.gson.JsonObject;
 public class Client extends WebSocketClient {
 
     private final WebSocketActionHandler actionHandler;
-    private final String serverType;
     private final String password;
-    private final String server_list;
+    private final String[] server_list;
 
-    public Client(URI serverUri, String serverType, String password, String server_list) {
+    public Client(URI serverUri, String password, String[] server_list) {
         super(serverUri);
         this.actionHandler = new WebSocketActionHandler();
         this.actionHandler.setClient(this); // Set client in action handler
-        this.serverType = serverType;
         this.password = password;
         this.server_list = server_list;
     }
@@ -28,7 +26,7 @@ public class Client extends WebSocketClient {
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         Debugger.debug("websocket", "Opened connection to server: " + getURI());
-        this.authenticate(serverType, password, server_list);
+        this.authenticate(password, server_list);
     }
 
     @Override
@@ -84,12 +82,17 @@ public class Client extends WebSocketClient {
         CommonCore.error(ex, "WebSocket error: " + ex.getMessage());
     }
 
-    public void authenticate(String serverType, String password, String server_list) {
+    public void authenticate(String password, String[] server_list) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("action", "authenticate");
-        jsonObject.addProperty("server_type", "bukkit");
-        jsonObject.addProperty("password", "MineAcademy");
-        jsonObject.addProperty("server_list", server_list);
+        jsonObject.addProperty("password", password);
+
+        // Convert String array to JSON array
+        com.google.gson.JsonArray serverArray = new com.google.gson.JsonArray();
+        for (String server : server_list) {
+            serverArray.add(new com.google.gson.JsonPrimitive(server));
+        }
+        jsonObject.add("server_list", serverArray);
 
         this.send(jsonObject.toString());
     }
