@@ -6,7 +6,7 @@ import org.mineacademy.fo.settings.SimpleSettings;
 @SuppressWarnings("unused")
 public class Settings extends SimpleSettings {
 
-    private static String SERVER_TYPE;
+    public static String SERVER_TYPE;
 
     private static void init() {
         SERVER_TYPE = getString("Server_Type");
