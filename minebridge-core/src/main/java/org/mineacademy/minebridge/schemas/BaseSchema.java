@@ -11,10 +11,15 @@ public abstract class BaseSchema {
     @SerializedName("action")
     private final String action;
 
+    @Getter
+    @SerializedName("server")
+    private final String server;
+
     private static final Gson gson = new Gson();
 
-    public BaseSchema(String action) {
+    public BaseSchema(String action, String server) {
         this.action = action;
+        this.server = server;
     }
 
     public String toJson() {

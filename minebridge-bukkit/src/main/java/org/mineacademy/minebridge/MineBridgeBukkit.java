@@ -20,7 +20,7 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 	private Client webSocketClient;
 
 	@Getter
-	private String serverName;
+	private static String serverName;
 
 	@Override
 	public String[] getStartupLogo() {
@@ -78,12 +78,12 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 			ex.printStackTrace();
 		}
 
-		final String serverName = properties.getProperty("server-name");
+		final String name = properties.getProperty("server-name");
 
-		if (serverName == null || serverName.isEmpty()) {
+		if (name == null || name.isEmpty()) {
 			Common.throwError(new FoException("Server name not found in server.properties"));
 		}
 
-		this.serverName = serverName;
+		serverName = name;
 	}
 }
