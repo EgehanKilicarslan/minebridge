@@ -1,19 +1,18 @@
 package org.mineacademy.minebridge;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Properties;
-
+import lombok.Getter;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.platform.BukkitPlugin;
 import org.mineacademy.minebridge.actions.TestActionHandler;
 import org.mineacademy.minebridge.websocket.Client;
 
-import lombok.Getter;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.util.Properties;
 
 public final class MineBridgeBukkit extends BukkitPlugin {
 
@@ -24,7 +23,7 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 
 	@Override
 	public String[] getStartupLogo() {
-		return new String[] {
+		return new String[]{
 				"&c  __  __ _____ _   _ ______ ____  _____  _____ _____   _____ ______ ",
 				"&4 |  \\/  |_   _| \\ | |  ____|  _ \\|  __ \\|_   _|  __ \\ / ____|  ____|",
 				"&4 | \\  / | | | |  \\| | |__  | |_) | |__) | | | | |  | | |  __| |__   ",
@@ -45,7 +44,7 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 		try {
 			// Create WebSocket client
 			webSocketClient = new Client(new URI("ws://localhost:8080"), "MineAcademy",
-					new String[] { serverName });
+					new String[]{serverName});
 
 			// Register handler classes with WebSocketAction annotations
 			webSocketClient.registerActionHandler(new TestActionHandler());
@@ -73,9 +72,9 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 		final Properties properties = new Properties();
 
 		try {
-			properties.load(new FileInputStream(serverProperties));
+			properties.load(Files.newInputStream(serverProperties.toPath()));
 		} catch (final IOException ex) {
-			ex.printStackTrace();
+			Common.error(ex, "Failed to load server.properties file: " + ex.getMessage());
 		}
 
 		final String name = properties.getProperty("server-name");
