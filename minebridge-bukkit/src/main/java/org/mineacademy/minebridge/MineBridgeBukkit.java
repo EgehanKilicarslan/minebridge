@@ -8,9 +8,13 @@ import java.nio.file.Files;
 import java.util.Properties;
 
 import org.mineacademy.fo.Common;
+import org.mineacademy.fo.MinecraftVersion;
+import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.platform.BukkitPlugin;
 import org.mineacademy.minebridge.actions.TestActionHandler;
+import org.mineacademy.minebridge.model.ServerType;
+import org.mineacademy.minebridge.settings.BukkitSettings;
 import org.mineacademy.minebridge.websocket.Client;
 
 import lombok.Getter;
@@ -21,6 +25,9 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 
 	@Getter
 	private static String serverName;
+
+	@Getter
+	private static ServerType serverType;
 
 	@Override
 	public String[] getStartupLogo() {
@@ -38,24 +45,31 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 	@Override
 	protected void onPluginPreStart() {
 		parseServerName();
+		parseServerType();
 	}
 
 	@Override
 	protected void onPluginStart() {
-		try {
-			// Create WebSocket client
-			webSocketClient = new Client(new URI("ws://localhost:8080"), "MineAcademy",
-					new String[] { serverName });
+		if (serverType.equals(ServerType.STANDALONE)) {
+			try {
+				// Create WebSocket client
+				webSocketClient = new Client(
+						new URI("ws://" + BukkitSettings.WebSocket.HOST + ":" + BukkitSettings.WebSocket.PORT),
+						BukkitSettings.WebSocket.PASSWORD,
+						new String[] { serverName });
 
-			// Register handler classes with WebSocketAction annotations
-			webSocketClient.registerActionHandler(new TestActionHandler());
+				// Register handler classes with WebSocketAction annotations
+				webSocketClient.registerActionHandler(new TestActionHandler());
 
-			// Connect to the WebSocket server
-			webSocketClient.connect();
+				// Connect to the WebSocket server
+				webSocketClient.connect();
 
-			Common.log("Client started and connected successfully");
-		} catch (URISyntaxException e) {
-			Common.error(e, "Failed to create client: " + e.getMessage());
+				Common.log("Client started and connected successfully");
+			} catch (URISyntaxException e) {
+				Common.error(e, "Failed to create client: " + e.getMessage());
+			}
+		} else {
+			Common.log("Server is running in proxied mode.");
 		}
 	}
 
@@ -68,6 +82,13 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 		}
 	}
 
+	/**
+	 * Parses the server name from the server.properties file.
+	 * The server name is read from the "server-name" property.
+	 * 
+	 * @throws FoException if the server name is not found or empty in the
+	 *                     server.properties file
+	 */
 	private void parseServerName() {
 		final File serverProperties = new File("server.properties");
 		final Properties properties = new Properties();
@@ -85,5 +106,60 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 		}
 
 		serverName = name;
+	}
+
+	/**
+	 * Detects and sets the server type based on the server's configuration files.
+	 * 
+	 * This method examines spigot.yml and paper-global.yml/paper.yml (depending on
+	 * Minecraft version)
+	 * to determine if the server is configured to work with a proxy like BungeeCord
+	 * or Velocity.
+	 * 
+	 * If proxy support is enabled in either configuration file, the server type is
+	 * set to PROXIED.
+	 * Otherwise, it defaults to STANDALONE.
+	 * 
+	 * @see ServerType
+	 */
+	private void parseServerType() {
+		final File spigotFile = new File("spigot.yml");
+		File paperFile = null;
+		final Properties spigotProperties = new Properties();
+		final Properties paperProperties = new Properties();
+
+		// Determine the Paper config file path based on Minecraft version
+		if (MinecraftVersion.atLeast(V.v1_18)) {
+			paperFile = new File("config/paper-global.yml");
+		} else if (MinecraftVersion.atLeast(V.v1_13)) {
+			paperFile = new File("paper.yml");
+		}
+
+		try {
+			// Load Spigot configuration if it exists
+			if (spigotFile.exists()) {
+				spigotProperties.load(Files.newInputStream(spigotFile.toPath()));
+			}
+
+			// Load Paper configuration if it exists
+			if (paperFile != null && paperFile.exists()) {
+				paperProperties.load(Files.newInputStream(paperFile.toPath()));
+			}
+		} catch (final IOException ex) {
+			Common.error(ex, "Failed to load server configuration files: " + ex.getMessage());
+		}
+
+		// Check if Velocity or BungeeCord proxy support is enabled in configs
+		final String velocity = paperFile != null ? paperProperties.getProperty("proxies.velocity") : null;
+		final String bungeecord = spigotProperties.getProperty("bungeecord");
+
+		// Set server type to PROXIED if either Velocity or BungeeCord is enabled
+		if ("true".equalsIgnoreCase(velocity) || "true".equalsIgnoreCase(bungeecord)) {
+			serverType = ServerType.PROXIED;
+			return;
+		}
+
+		// Default to STANDALONE if no proxy support is configured
+		serverType = ServerType.STANDALONE;
 	}
 }

@@ -1,25 +1,25 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Maven Clean Install",
-            "type": "shell",
-            "command": "mvn clean install && if [ -f minebridge-bukkit/target/MineBridge-Bukkit-1.0.0.jar ]; then cp minebridge-bukkit/target/MineBridge-Bukkit-1.0.0.jar \"/home/egehan/Test Server/1.8/plugins/\"; fi",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "Minecraft Server Start",
-            "type": "shell",
-            "command": "cd \"/home/egehan/Test Server/1.8/\" && sh start.sh",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "problemMatcher": []
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Maven Clean Install",
+      "type": "shell",
+      "command": "mvn clean install && if [ -f minebridge-bukkit/target/MineBridge-Bukkit-1.0.0.jar ]; then cp minebridge-bukkit/target/MineBridge-Bukkit-1.0.0.jar \"/home/egehan/Test Server/1.8/plugins/\"; fi && if [ -f minebridge-bungeecord/target/MineBridge-BungeeCord-1.0.0.jar ]; then cp minebridge-bungeecord/target/MineBridge-BungeeCord-1.0.0.jar \"/home/egehan/Test Server/BungeeCord/plugins/\"; fi",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Minecraft Server Start",
+      "type": "shell",
+      "command": "cd \"/home/egehan/Test Server/1.8/\" && sh start.sh",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    }
+  ]
 }

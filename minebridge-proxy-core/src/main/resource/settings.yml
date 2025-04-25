@@ -1,6 +1,9 @@
 # -------------------------------------------------------------------------------------------------
 # WebSocket configuration for the communication between plugin components.
 #
+# For proxied servers, this informations are not used.
+# Just give them a random valid value.
+#
 # Host: The host address to bind the WebSocket server to.
 # Port: The port number on which the WebSocket server will listen for connections.
 # Password: The password required to authenticate WebSocket connections.
