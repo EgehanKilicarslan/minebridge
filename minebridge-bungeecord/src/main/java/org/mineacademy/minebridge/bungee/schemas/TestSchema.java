@@ -1,6 +1,6 @@
-package org.mineacademy.minebridge.schemas;
+package org.mineacademy.minebridge.bungee.schemas;
 
-import org.mineacademy.fo.platform.Platform;
+import org.mineacademy.minebridge.schemas.BaseSchema;
 
 import lombok.Getter;
 
@@ -10,7 +10,7 @@ public class TestSchema extends BaseSchema {
     private String text;
 
     public TestSchema(String text) {
-        super("test", Platform.getCustomServerName());
+        super("test", "bungeecord");
         this.text = text;
     }
 }

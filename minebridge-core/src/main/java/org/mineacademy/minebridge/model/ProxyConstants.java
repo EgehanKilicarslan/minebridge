@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.proxy;
+package org.mineacademy.minebridge.model;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

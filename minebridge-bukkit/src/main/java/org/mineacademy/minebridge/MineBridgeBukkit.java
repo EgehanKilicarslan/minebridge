@@ -12,6 +12,7 @@ import org.mineacademy.fo.MinecraftVersion;
 import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.platform.BukkitPlugin;
+import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.minebridge.actions.TestActionHandler;
 import org.mineacademy.minebridge.model.ServerType;
 import org.mineacademy.minebridge.settings.BukkitSettings;
@@ -22,9 +23,6 @@ import lombok.Getter;
 public final class MineBridgeBukkit extends BukkitPlugin {
 
 	private Client webSocketClient;
-
-	@Getter
-	private static String serverName;
 
 	@Getter
 	private static ServerType serverType;
@@ -56,7 +54,7 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 				webSocketClient = new Client(
 						new URI("ws://" + BukkitSettings.WebSocket.HOST + ":" + BukkitSettings.WebSocket.PORT),
 						BukkitSettings.WebSocket.PASSWORD,
-						new String[] { serverName });
+						new String[] { Platform.getCustomServerName() });
 
 				// Register handler classes with WebSocketAction annotations
 				webSocketClient.registerActionHandler(new TestActionHandler());
@@ -105,7 +103,7 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 			Common.throwError(new FoException("Server name not found in server.properties"));
 		}
 
-		serverName = name;
+		Platform.setCustomServerName(name);
 	}
 
 	/**

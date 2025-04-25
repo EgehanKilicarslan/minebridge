@@ -1,0 +1,4 @@
+name: MineBridgeBungeeCord
+main: ${main.class}
+version: ${project.version}
+author: kangarko

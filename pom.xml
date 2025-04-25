@@ -13,8 +13,8 @@
 	<modules>
 		<module>minebridge-core</module>
 		<module>minebridge-proxy-core</module>
-		<!-- <module>minebridge-velocity</module>
-		<module>minebridge-bungeecord</module> -->
+		<!-- <module>minebridge-velocity</module> -->
+		<module>minebridge-bungeecord</module>
 		<module>minebridge-bukkit</module>
 	</modules>
 
