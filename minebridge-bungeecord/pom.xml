@@ -10,7 +10,7 @@
 	</parent>
 
 	<artifactId>minebridge-bungeecord</artifactId>
-	<name>MineBridgeBungeeCord</name>
+	<name>MineBridge-BungeeCord</name>
 	<version>1.0.0</version>
 
 	<properties>

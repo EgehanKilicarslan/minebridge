@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.platform.BungeePlugin;
+import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.minebridge.bungee.actions.TestActionHandler;
 import org.mineacademy.minebridge.proxy.settings.ProxySettings;
 import org.mineacademy.minebridge.websocket.Client;
@@ -29,11 +30,13 @@ public class MineBridgeBungeeCord extends BungeePlugin {
     @Override
     protected void onPluginStart() {
         try {
+            Platform.setCustomServerName("bungeecord");
+
             // Create WebSocket client
             webSocketClient = new Client(
                     new URI("ws://" + ProxySettings.WebSocket.HOST + ":" + ProxySettings.WebSocket.PORT),
                     ProxySettings.WebSocket.PASSWORD,
-                    new String[] { "bungeecord", "test1" });
+                    getServerNames());
 
             // Register handler classes with WebSocketAction annotations
             webSocketClient.registerActionHandler(new TestActionHandler());
@@ -45,5 +48,20 @@ public class MineBridgeBungeeCord extends BungeePlugin {
         } catch (URISyntaxException e) {
             Common.error(e, "Failed to create client: " + e.getMessage());
         }
+    }
+
+    @Override
+    protected void onPluginStop() {
+        // Close the WebSocket connection when the plugin is disabled
+        if (webSocketClient != null && webSocketClient.isOpen()) {
+            webSocketClient.close();
+            Common.log("Client connection closed");
+        }
+    }
+
+    private String[] getServerNames() {
+        return Platform.getServers().stream()
+                .map(server -> server.getName())
+                .toArray(size -> new String[size]);
     }
 }
