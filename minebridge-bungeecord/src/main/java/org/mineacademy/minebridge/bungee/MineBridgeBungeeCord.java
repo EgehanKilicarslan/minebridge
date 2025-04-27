@@ -7,8 +7,8 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.platform.BungeePlugin;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.minebridge.bungee.actions.TestActionHandler;
-import org.mineacademy.minebridge.proxy.settings.ProxySettings;
-import org.mineacademy.minebridge.websocket.Client;
+import org.mineacademy.minebridge.core.settings.Settings;
+import org.mineacademy.minebridge.core.websocket.Client;
 
 public class MineBridgeBungeeCord extends BungeePlugin {
 
@@ -32,8 +32,8 @@ public class MineBridgeBungeeCord extends BungeePlugin {
         try {
             // Create WebSocket client
             webSocketClient = new Client(
-                    new URI("ws://" + ProxySettings.WebSocket.HOST + ":" + ProxySettings.WebSocket.PORT),
-                    ProxySettings.WebSocket.PASSWORD,
+                    new URI("ws://" + Settings.WebSocket.HOST + ":" + Settings.WebSocket.PORT),
+                    Settings.WebSocket.PASSWORD,
                     getServerNames());
 
             // Register handler classes with WebSocketAction annotations

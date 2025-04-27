@@ -1,11 +1,11 @@
-package org.mineacademy.minebridge.annotation;
+package org.mineacademy.minebridge.core.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.mineacademy.minebridge.schemas.BaseSchema;
+import org.mineacademy.minebridge.core.internal.BaseSchema;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

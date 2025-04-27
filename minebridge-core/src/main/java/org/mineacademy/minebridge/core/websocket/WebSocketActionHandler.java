@@ -1,12 +1,12 @@
-package org.mineacademy.minebridge.websocket;
+package org.mineacademy.minebridge.core.websocket;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.mineacademy.minebridge.annotation.WebSocketAction;
-import org.mineacademy.minebridge.implementations.WebSocketAware;
-import org.mineacademy.minebridge.schemas.BaseSchema;
+import org.mineacademy.minebridge.core.annotation.WebSocketAction;
+import org.mineacademy.minebridge.core.internal.BaseSchema;
+import org.mineacademy.minebridge.core.internal.WebSocketAware;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

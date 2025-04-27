@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.proxy.settings;
+package org.mineacademy.minebridge.core.settings;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,7 +8,7 @@ import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.settings.SimpleSettings;
 
 @SuppressWarnings("unused")
-public class ProxySettings extends SimpleSettings {
+public class Settings extends SimpleSettings {
 
     @Override
     protected List<String> getUncommentedSections() {

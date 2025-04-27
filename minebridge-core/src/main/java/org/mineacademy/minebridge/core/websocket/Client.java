@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.websocket;
+package org.mineacademy.minebridge.core.websocket;
 
 import java.net.URI;
 

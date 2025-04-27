@@ -4,7 +4,7 @@ import org.mineacademy.fo.ProxyUtil;
 import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.command.SimpleCommand;
 import org.mineacademy.fo.platform.Platform;
-import org.mineacademy.minebridge.model.MineBridgeProxyMessage;
+import org.mineacademy.minebridge.core.model.MineBridgeProxyMessage;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.model;
+package org.mineacademy.minebridge.core.model;
 
 import org.mineacademy.fo.proxy.ProxyMessage;
 

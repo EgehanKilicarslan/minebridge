@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.model;
+package org.mineacademy.minebridge.core.model;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -14,9 +14,9 @@ import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.platform.BukkitPlugin;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.minebridge.actions.TestActionHandler;
+import org.mineacademy.minebridge.core.settings.Settings;
+import org.mineacademy.minebridge.core.websocket.Client;
 import org.mineacademy.minebridge.model.ServerType;
-import org.mineacademy.minebridge.settings.BukkitSettings;
-import org.mineacademy.minebridge.websocket.Client;
 
 import lombok.Getter;
 
@@ -52,8 +52,8 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 			try {
 				// Create WebSocket client
 				webSocketClient = new Client(
-						new URI("ws://" + BukkitSettings.WebSocket.HOST + ":" + BukkitSettings.WebSocket.PORT),
-						BukkitSettings.WebSocket.PASSWORD,
+						new URI("ws://" + Settings.WebSocket.HOST + ":" + Settings.WebSocket.PORT),
+						Settings.WebSocket.PASSWORD,
 						new String[] { Platform.getCustomServerName() });
 
 				// Register handler classes with WebSocketAction annotations

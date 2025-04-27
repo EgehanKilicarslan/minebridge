@@ -1,10 +1,10 @@
 package org.mineacademy.minebridge.actions;
 
 import org.mineacademy.fo.debug.Debugger;
-import org.mineacademy.minebridge.annotation.WebSocketAction;
-import org.mineacademy.minebridge.implementations.WebSocketAware;
-import org.mineacademy.minebridge.schemas.TestSchema;
-import org.mineacademy.minebridge.websocket.Client;
+import org.mineacademy.minebridge.core.annotation.WebSocketAction;
+import org.mineacademy.minebridge.core.internal.WebSocketAware;
+import org.mineacademy.minebridge.core.schema.TestSchema;
+import org.mineacademy.minebridge.core.websocket.Client;
 
 public class TestActionHandler implements WebSocketAware {
 

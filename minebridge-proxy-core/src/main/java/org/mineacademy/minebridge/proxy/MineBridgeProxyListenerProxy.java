@@ -5,8 +5,8 @@ import org.mineacademy.fo.annotation.AutoRegister;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.fo.proxy.ProxyListener;
 import org.mineacademy.fo.proxy.message.IncomingMessage;
-import org.mineacademy.minebridge.model.MineBridgeProxyMessage;
-import org.mineacademy.minebridge.model.ProxyConstants;
+import org.mineacademy.minebridge.core.model.MineBridgeProxyMessage;
+import org.mineacademy.minebridge.core.model.ProxyConstants;
 
 import lombok.Getter;
 

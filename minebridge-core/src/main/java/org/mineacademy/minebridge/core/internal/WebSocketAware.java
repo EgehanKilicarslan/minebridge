@@ -1,6 +1,6 @@
-package org.mineacademy.minebridge.implementations;
+package org.mineacademy.minebridge.core.internal;
 
-import org.mineacademy.minebridge.websocket.Client;
+import org.mineacademy.minebridge.core.websocket.Client;
 
 /**
  * Interface for classes that need access to the WebSocket client.
