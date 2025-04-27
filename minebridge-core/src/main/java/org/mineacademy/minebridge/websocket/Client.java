@@ -106,4 +106,16 @@ public class Client extends WebSocketClient {
     public void registerActionHandler(Object instance) {
         actionHandler.registerClass(instance);
     }
+
+    /**
+     * Register multiple action handler classes at once
+     * 
+     * @param instances Array of instances containing annotated methods
+     */
+    public void registerActionHandler(Object... instances) {
+        for (Object instance : instances) {
+            actionHandler.registerClass(instance);
+        }
+        Debugger.debug("websocket", "Registered " + instances.length + " action handlers");
+    }
 }
