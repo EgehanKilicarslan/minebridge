@@ -7,6 +7,7 @@ import org.mineacademy.minebridge.model.ProxyConstants;
 
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 public final class MineBridgeProxyListenerBukkit extends ProxyListener {
 
     @Getter

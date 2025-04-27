@@ -30,8 +30,6 @@ public class MineBridgeBungeeCord extends BungeePlugin {
     @Override
     protected void onPluginStart() {
         try {
-            Platform.setCustomServerName("bungeecord");
-
             // Create WebSocket client
             webSocketClient = new Client(
                     new URI("ws://" + ProxySettings.WebSocket.HOST + ":" + ProxySettings.WebSocket.PORT),

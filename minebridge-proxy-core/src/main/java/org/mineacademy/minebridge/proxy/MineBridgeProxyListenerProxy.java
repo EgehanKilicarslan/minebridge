@@ -10,6 +10,7 @@ import org.mineacademy.minebridge.model.ProxyConstants;
 
 import lombok.Getter;
 
+@SuppressWarnings("unused")
 @AutoRegister(requirePlatform = { Platform.Type.BUNGEECORD, Platform.Type.VELOCITY })
 public final class MineBridgeProxyListenerProxy extends ProxyListener {
 
