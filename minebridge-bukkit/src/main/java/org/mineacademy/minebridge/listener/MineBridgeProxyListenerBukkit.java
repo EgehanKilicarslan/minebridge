@@ -26,10 +26,12 @@ public final class MineBridgeProxyListenerBukkit extends ProxyListener {
         this.packet = (MineBridgeProxyMessage) input.getMessage();
         this.server = input.getServerName();
 
-        if (this.packet == MineBridgeProxyMessage.TEST) {
-            final String text = input.readString();
-            System.out.println("Received message: " + text);
-        }
+        /*
+         * if (this.packet == MineBridgeProxyMessage.TEST) {
+         * final String text = input.readString();
+         * System.out.println("Received message: " + text);
+         * }
+         */
     }
 
 }

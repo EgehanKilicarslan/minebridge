@@ -15,7 +15,6 @@ import lombok.Getter;
 public final class MineBridgeProxyListenerProxy extends ProxyListener {
 
     private String action;
-    private String serverName;
 
     @Getter
     private final static MineBridgeProxyListenerProxy instance = new MineBridgeProxyListenerProxy();
@@ -30,14 +29,15 @@ public final class MineBridgeProxyListenerProxy extends ProxyListener {
             final byte[] data = message.getData();
 
             this.action = message.readString();
-            this.serverName = message.readString();
 
             final MineBridgeProxyMessage packet = (MineBridgeProxyMessage) message.getMessage();
 
-            if (packet == MineBridgeProxyMessage.TEST) {
-                final String text = message.readString();
-                CommonCore.log("Received message: " + text);
-            }
+            /*
+             * if (packet == MineBridgeProxyMessage.TEST) {
+             * final String text = message.readString();
+             * CommonCore.log("Received message: " + text);
+             * }
+             */
 
         } catch (final Throwable t) {
             CommonCore.error(t, "Error while processing message");

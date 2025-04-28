@@ -25,9 +25,9 @@ public abstract class BaseSchema {
         this.server = SERVER_NAME;
     }
 
-    public BaseSchema(String action, String server) {
+    public BaseSchema(String action, boolean includeServer) {
         this.action = action;
-        this.server = server;
+        this.server = includeServer ? SERVER_NAME : null;
     }
 
     public String toJson() {

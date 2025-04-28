@@ -6,10 +6,11 @@ import lombok.Getter;
 
 public enum MineBridgeProxyMessage implements ProxyMessage {
 
-    TEST(
+    PLAYER_STATUS_CHECK(
             String.class, // Action name
-            String.class, // Server name
-            String.class // Message content
+            String.class, // Player name
+            String.class, // Player UUID
+            Boolean.class // Online status
     );
 
     @Getter
