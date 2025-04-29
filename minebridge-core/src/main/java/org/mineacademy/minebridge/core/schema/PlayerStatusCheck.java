@@ -4,7 +4,7 @@ import org.mineacademy.minebridge.core.internal.BaseSchema;
 
 import lombok.Getter;
 
-public class PlayerStatusCheckSchema extends BaseSchema {
+public class PlayerStatusCheck extends BaseSchema {
 
     @Getter
     private final String username;
@@ -15,7 +15,7 @@ public class PlayerStatusCheckSchema extends BaseSchema {
     @Getter
     private final Boolean online;
 
-    public PlayerStatusCheckSchema(String username, String uuid, Boolean online) {
+    public PlayerStatusCheck(String username, String uuid, Boolean online) {
         super("player-status-check");
         this.username = username;
         this.uuid = uuid;

@@ -8,7 +8,7 @@ import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.remain.Remain;
 import org.mineacademy.minebridge.core.annotation.WebSocketAction;
 import org.mineacademy.minebridge.core.internal.WebSocketAware;
-import org.mineacademy.minebridge.core.schema.PlayerStatusCheckSchema;
+import org.mineacademy.minebridge.core.schema.PlayerStatusCheck;
 import org.mineacademy.minebridge.core.websocket.Client;
 
 public class PlayerActionHandler implements WebSocketAware {
@@ -20,8 +20,8 @@ public class PlayerActionHandler implements WebSocketAware {
         this.client = client;
     }
 
-    @WebSocketAction(value = "player-status-check", schema = PlayerStatusCheckSchema.class)
-    public void playerStatusCheck(PlayerStatusCheckSchema schema) {
+    @WebSocketAction(value = "player-status-check", schema = PlayerStatusCheck.class)
+    public void playerStatusCheck(PlayerStatusCheck schema) {
         // Extract username and UUID from the schema
         final String username = schema.getUsername();
         final UUID uuid = schema.getUuid() != null ? UUID.fromString(schema.getUuid()) : null;
@@ -32,7 +32,7 @@ public class PlayerActionHandler implements WebSocketAware {
                 : uuid != null ? Remain.getPlayerByUUID(uuid) : null;
 
         // Create response schema
-        String response = new PlayerStatusCheckSchema(
+        String response = new PlayerStatusCheck(
                 player != null ? player.getName() : username,
                 player != null ? player.getUniqueId().toString() : (uuid != null ? uuid.toString() : null),
                 player != null && player.isConnected()).toJson();
