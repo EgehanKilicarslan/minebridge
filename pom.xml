@@ -6,14 +6,14 @@
 
 	<groupId>org.mineacademy</groupId>
 	<artifactId>minebridge-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 
 	<packaging>pom</packaging>
 
 	<modules>
 		<module>minebridge-core</module>
 		<module>minebridge-proxy-core</module>
-		<!-- <module>minebridge-velocity</module> -->
+		<module>minebridge-velocity</module>
 		<module>minebridge-bungeecord</module>
 		<module>minebridge-bukkit</module>
 	</modules>

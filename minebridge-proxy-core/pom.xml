@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.mineacademy</groupId>
 		<artifactId>minebridge-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<artifactId>minebridge-proxy-core</artifactId>
@@ -15,13 +15,21 @@
 		<dependency>
 			<groupId>org.mineacademy</groupId>
 			<artifactId>minebridge-core</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<version>1.18.38</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Adventure -->
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-api</artifactId>
+			<version>4.20.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

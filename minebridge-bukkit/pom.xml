@@ -6,12 +6,12 @@
 	<parent>
 		<groupId>org.mineacademy</groupId>
 		<artifactId>minebridge-parent</artifactId>
-		<version>1.0.0</version>
+		<version>1.1.0</version>
 	</parent>
 
 	<artifactId>minebridge-bukkit</artifactId>
 	<name>MineBridge-Bukkit</name>
-	<version>1.0.0</version>
+	<version>1.1.0</version>
 	
 	<properties>
 		<main.class>org.mineacademy.minebridge.MineBridgeBukkit</main.class>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.mineacademy</groupId>
 			<artifactId>minebridge-core</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 			<scope>compile</scope>
 		</dependency>		
 		<dependency>
