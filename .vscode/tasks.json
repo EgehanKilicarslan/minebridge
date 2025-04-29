@@ -4,7 +4,7 @@
     {
       "label": "Maven Clean Install",
       "type": "shell",
-      "command": "mvn clean install && if [ -f minebridge-bukkit/target/MineBridge-Bukkit-1.0.0.jar ]; then cp minebridge-bukkit/target/MineBridge-Bukkit-1.0.0.jar \"/home/egehan/Test Server/1.8/plugins/\"; fi && if [ -f minebridge-bungeecord/target/MineBridge-BungeeCord-1.0.0.jar ]; then cp minebridge-bungeecord/target/MineBridge-BungeeCord-1.0.0.jar \"/home/egehan/Test Server/BungeeCord/plugins/\"; fi",
+      "command": "VERSION=1.1.0 && SERVER_DIR=\"/home/egehan/Test Server\" && mvn clean install && for MODULE in bukkit bungeecord velocity; do JAR_PATH=\"minebridge-${MODULE}/target/MineBridge-$(echo ${MODULE} | sed 's/^\\(.*\\)$/\\u\\1/')-${VERSION}.jar\"; if [ -f \"$JAR_PATH\" ]; then case \"$MODULE\" in bukkit) TARGET=\"${SERVER_DIR}/1.8/plugins/\";; bungeecord) TARGET=\"${SERVER_DIR}/BungeeCord/plugins/\";; velocity) TARGET=\"${SERVER_DIR}/Velocity/plugins/\";; esac; cp \"$JAR_PATH\" \"$TARGET\"; fi; done",
       "group": {
         "kind": "build",
         "isDefault": true
