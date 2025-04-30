@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.listener;
+package org.mineacademy.minebridge.bukkit.listener;
 
 import org.mineacademy.fo.proxy.ProxyListener;
 import org.mineacademy.fo.proxy.message.IncomingMessage;

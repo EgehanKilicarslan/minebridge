@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge;
+package org.mineacademy.minebridge.bukkit;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,10 +13,10 @@ import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.platform.BukkitPlugin;
 import org.mineacademy.fo.platform.Platform;
-import org.mineacademy.minebridge.actions.PlayerActionHandler;
+import org.mineacademy.minebridge.bukkit.actions.PlayerActionHandler;
+import org.mineacademy.minebridge.bukkit.model.ServerType;
 import org.mineacademy.minebridge.core.settings.Settings;
 import org.mineacademy.minebridge.core.websocket.Client;
-import org.mineacademy.minebridge.model.ServerType;
 
 import lombok.Getter;
 

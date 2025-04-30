@@ -1,61 +1,60 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.mineacademy</groupId>
-		<artifactId>minebridge-parent</artifactId>
-		<version>1.1.0</version>
-	</parent>
+    <!-- Parent Configuration -->
+    <parent>
+        <groupId>org.mineacademy</groupId>
+        <artifactId>minebridge-parent</artifactId>
+        <version>1.1.0</version>
+    </parent>
 
-	<artifactId>minebridge-core</artifactId>
+    <artifactId>minebridge-core</artifactId>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.38</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mineacademy</groupId>
-			<artifactId>foundation-core</artifactId>
-			<version>LATEST</version>
-		</dependency>
-		<dependency>
-			<groupId>org.java-websocket</groupId>
-			<artifactId>Java-WebSocket</artifactId>
-			<version>1.6.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.13.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>2.0.17</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>2.0.17</version>
-		</dependency>
+    <dependencies>
+        <!-- Foundation -->
+        <dependency>
+            <groupId>org.mineacademy</groupId>
+            <artifactId>foundation-core</artifactId>
+        </dependency>
+        
+        <!-- Tools -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        
+        <!-- WebSocket -->
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+        </dependency>
+        
+        <!-- JSON -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
 
-		<!-- Adventure -->
-		<dependency>
-			<groupId>net.kyori</groupId>
-			<artifactId>adventure-api</artifactId>
-			<version>4.20.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.kyori</groupId>
-			<artifactId>adventure-text-serializer-plain</artifactId>
-			<version>4.20.0</version>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
+        <!-- Adventure API -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-plain</artifactId>
+        </dependency>
+    </dependencies>
 </project>

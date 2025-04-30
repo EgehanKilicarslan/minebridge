@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.actions;
+package org.mineacademy.minebridge.bukkit.actions;
 
 import java.util.UUID;
 
@@ -24,17 +24,16 @@ public class PlayerActionHandler implements WebSocketAware {
     public void playerStatusCheck(PlayerStatusCheck schema) {
         // Extract username and UUID from the schema
         final String username = schema.getUsername();
-        final UUID uuid = schema.getUuid() != null ? UUID.fromString(schema.getUuid()) : null;
+        final String uuid = schema.getUuid();
 
         // Find player by username or UUID (if available)
-
         final Player player = username != null ? PlayerUtil.getPlayerByNick(username, false)
-                : uuid != null ? Remain.getPlayerByUUID(uuid) : null;
+                : uuid != null ? Remain.getPlayerByUUID(UUID.fromString(uuid)) : null;
 
         // Create response schema
         String response = new PlayerStatusCheck(
                 player != null ? player.getName() : username,
-                player != null ? player.getUniqueId().toString() : (uuid != null ? uuid.toString() : null),
+                player != null ? player.getUniqueId().toString() : uuid,
                 player != null && player.isConnected()).toJson();
 
         // Log the response for debugging

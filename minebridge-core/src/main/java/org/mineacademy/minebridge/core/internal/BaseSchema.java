@@ -20,6 +20,11 @@ public abstract class BaseSchema {
     @SerializedName("server")
     private final String server;
 
+    public BaseSchema(String action, String server) {
+        this.action = action;
+        this.server = server;
+    }
+
     public BaseSchema(String action) {
         this.action = action;
         this.server = SERVER_NAME;

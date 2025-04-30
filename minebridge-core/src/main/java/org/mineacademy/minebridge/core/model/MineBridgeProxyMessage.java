@@ -1,16 +1,21 @@
 package org.mineacademy.minebridge.core.model;
 
+import org.mineacademy.fo.model.SimpleComponent;
 import org.mineacademy.fo.proxy.ProxyMessage;
 
 import lombok.Getter;
 
 public enum MineBridgeProxyMessage implements ProxyMessage {
 
-    PLAYER_STATUS_CHECK(
-            String.class, // Action name
+    SEND_PLAYER_MESSAGE(
             String.class, // Player name
-            String.class, // Player UUID
-            Boolean.class // Online status
+            MessageType.class, // Message type
+            SimpleComponent.class // Message
+    ),
+
+    SEND_GLOBAL_MESSAGE(
+            MessageType.class, // Message type
+            SimpleComponent.class // Message
     );
 
     @Getter

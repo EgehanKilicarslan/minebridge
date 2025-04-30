@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.model;
+package org.mineacademy.minebridge.bukkit.model;
 
 public enum ServerType {
 

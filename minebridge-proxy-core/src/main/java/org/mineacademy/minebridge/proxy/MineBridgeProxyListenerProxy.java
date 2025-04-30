@@ -28,8 +28,6 @@ public final class MineBridgeProxyListenerProxy extends ProxyListener {
         try {
             final byte[] data = message.getData();
 
-            this.action = message.readString();
-
             final MineBridgeProxyMessage packet = (MineBridgeProxyMessage) message.getMessage();
 
             /*
