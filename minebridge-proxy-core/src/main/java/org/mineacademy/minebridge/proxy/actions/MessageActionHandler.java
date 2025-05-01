@@ -1,4 +1,4 @@
-package org.mineacademy.minebridge.bungee.actions;
+package org.mineacademy.minebridge.proxy.actions;
 
 import java.util.EnumMap;
 import java.util.Map;

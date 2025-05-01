@@ -6,11 +6,11 @@ import java.net.URISyntaxException;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.platform.BungeePlugin;
 import org.mineacademy.fo.platform.Platform;
-import org.mineacademy.minebridge.bungee.actions.CommandActionHandler;
-import org.mineacademy.minebridge.bungee.actions.MessageActionHandler;
-import org.mineacademy.minebridge.bungee.actions.PlayerActionHandler;
 import org.mineacademy.minebridge.core.settings.Settings;
 import org.mineacademy.minebridge.core.websocket.Client;
+import org.mineacademy.minebridge.proxy.actions.CommandActionHandler;
+import org.mineacademy.minebridge.proxy.actions.MessageActionHandler;
+import org.mineacademy.minebridge.proxy.actions.PlayerActionHandler;
 
 public class MineBridgeBungeeCord extends BungeePlugin {
 
