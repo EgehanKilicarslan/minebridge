@@ -4,7 +4,7 @@ import org.mineacademy.minebridge.core.internal.BaseSchema;
 
 import lombok.Getter;
 
-public class SendGlobalServerMessage extends BaseSchema {
+public class SendServerMessage extends BaseSchema {
 
     /**
      * The message type to send to all players.
@@ -18,8 +18,8 @@ public class SendGlobalServerMessage extends BaseSchema {
     @Getter
     private final String message;
 
-    public SendGlobalServerMessage(String message_type, String message, String server) {
-        super("send-global-server-message", server);
+    public SendServerMessage(String message_type, String message, String server) {
+        super("send-server-message", server);
         this.message_type = message_type;
         this.message = message;
     }

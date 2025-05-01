@@ -15,7 +15,7 @@ import org.mineacademy.minebridge.core.annotation.WebSocketAction;
 import org.mineacademy.minebridge.core.internal.WebSocketAware;
 import org.mineacademy.minebridge.core.model.MessageType;
 import org.mineacademy.minebridge.core.schema.SendGlobalMessage;
-import org.mineacademy.minebridge.core.schema.SendGlobalServerMessage;
+import org.mineacademy.minebridge.core.schema.SendServerMessage;
 import org.mineacademy.minebridge.core.schema.SendPlayerMessage;
 import org.mineacademy.minebridge.core.websocket.Client;
 
@@ -173,8 +173,8 @@ public class MessageActionHandler implements WebSocketAware {
      * 
      * @param schema The server message schema data
      */
-    @WebSocketAction(value = "send-global-server-message", schema = SendGlobalServerMessage.class)
-    public void sendServerMessage(SendGlobalServerMessage schema) {
+    @WebSocketAction(value = "send-server-message", schema = SendServerMessage.class)
+    public void sendServerMessage(SendServerMessage schema) {
         final String serverName = schema.getServer();
         final MessageType message_type = MessageType.fromString(schema.getMessage_type());
         final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());

@@ -94,7 +94,7 @@ public class MessageActionHandler implements WebSocketAware {
     }
 
     @WebSocketAction(value = "send-global-message", schema = SendGlobalMessage.class)
-    @WebSocketAction(value = "send-global-server-message", schema = SendGlobalMessage.class)
+    @WebSocketAction(value = "send-server-message", schema = SendGlobalMessage.class)
     public void handleGlobalAndServerMessage(SendGlobalMessage schema) {
         final MessageType message_type = MessageType.fromString(schema.getMessage_type());
         if (message_type == null) {
