@@ -10,7 +10,7 @@ public class SendGlobalServerMessage extends BaseSchema {
      * The message type to send to all players.
      */
     @Getter
-    private final String type;
+    private final String message_type;
 
     /**
      * The message to send to all players.
@@ -18,9 +18,9 @@ public class SendGlobalServerMessage extends BaseSchema {
     @Getter
     private final String message;
 
-    public SendGlobalServerMessage(String type, String message, String server) {
+    public SendGlobalServerMessage(String message_type, String message, String server) {
         super("send-global-server-message", server);
-        this.type = type;
+        this.message_type = message_type;
         this.message = message;
     }
 }

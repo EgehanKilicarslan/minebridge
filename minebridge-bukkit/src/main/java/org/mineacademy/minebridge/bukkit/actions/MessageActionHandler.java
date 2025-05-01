@@ -80,13 +80,13 @@ public class MessageActionHandler implements WebSocketAware {
             return;
         }
 
-        final MessageType type = MessageType.fromString(schema.getType());
-        if (type == null) {
+        final MessageType message_type = MessageType.fromString(schema.getMessage_type());
+        if (message_type == null) {
             return;
         }
 
         final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());
-        final BiConsumer<Player, SimpleComponent> action = PLAYER_MESSAGE_FUNCTIONS.get(type);
+        final BiConsumer<Player, SimpleComponent> action = PLAYER_MESSAGE_FUNCTIONS.get(message_type);
 
         if (action != null) {
             action.accept(player, message);
@@ -96,13 +96,13 @@ public class MessageActionHandler implements WebSocketAware {
     @WebSocketAction(value = "send-global-message", schema = SendGlobalMessage.class)
     @WebSocketAction(value = "send-global-server-message", schema = SendGlobalMessage.class)
     public void handleGlobalAndServerMessage(SendGlobalMessage schema) {
-        final MessageType type = MessageType.fromString(schema.getType());
-        if (type == null) {
+        final MessageType message_type = MessageType.fromString(schema.getMessage_type());
+        if (message_type == null) {
             return;
         }
 
         final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());
-        final Consumer<SimpleComponent> action = GLOBAL_MESSAGE_FUNCTIONS.get(type);
+        final Consumer<SimpleComponent> action = GLOBAL_MESSAGE_FUNCTIONS.get(message_type);
 
         if (action != null) {
             action.accept(message);

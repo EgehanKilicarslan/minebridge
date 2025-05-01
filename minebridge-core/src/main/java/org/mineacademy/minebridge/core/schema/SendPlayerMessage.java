@@ -22,7 +22,7 @@ public class SendPlayerMessage extends BaseSchema {
      * The message type to send to the player.
      */
     @Getter
-    private final String type;
+    private final String message_type;
 
     /**
      * The message to send to the player.
@@ -30,11 +30,11 @@ public class SendPlayerMessage extends BaseSchema {
     @Getter
     private final String message;
 
-    public SendPlayerMessage(String username, String uuid, String type, String message) {
+    public SendPlayerMessage(String username, String uuid, String message_type, String message) {
         super("send-player-message", false);
         this.username = username;
         this.uuid = uuid;
-        this.type = type;
+        this.message_type = message_type;
         this.message = message;
     }
 

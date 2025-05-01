@@ -134,15 +134,15 @@ public class MessageActionHandler implements WebSocketAware {
     public void sendPlayerMessage(SendPlayerMessage schema) {
         final String username = schema.getUsername();
         final String uuid = schema.getUuid();
-        final MessageType type = MessageType.fromString(schema.getType());
+        final MessageType message_type = MessageType.fromString(schema.getMessage_type());
         final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());
 
         // Find player by username or UUID
         final FoundationPlayer player = username != null ? Platform.getPlayer(username)
                 : uuid != null ? Platform.getPlayer(UUID.fromString(uuid)) : null;
 
-        if (player != null && type != null) {
-            Consumer<PlayerMessageContext> action = PLAYER_MESSAGE_ACTIONS.get(type);
+        if (player != null && message_type != null) {
+            Consumer<PlayerMessageContext> action = PLAYER_MESSAGE_ACTIONS.get(message_type);
             if (action != null) {
                 action.accept(new PlayerMessageContext(player, message));
             }
@@ -156,11 +156,11 @@ public class MessageActionHandler implements WebSocketAware {
      */
     @WebSocketAction(value = "send-global-message", schema = SendGlobalMessage.class)
     public void sendGlobalMessage(SendGlobalMessage schema) {
-        final MessageType type = MessageType.fromString(schema.getType());
+        final MessageType message_type = MessageType.fromString(schema.getMessage_type());
         final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());
 
-        if (type != null) {
-            Consumer<SimpleComponent> action = GLOBAL_MESSAGE_ACTIONS.get(type);
+        if (message_type != null) {
+            Consumer<SimpleComponent> action = GLOBAL_MESSAGE_ACTIONS.get(message_type);
             if (action != null) {
                 action.accept(message);
             }
@@ -176,13 +176,13 @@ public class MessageActionHandler implements WebSocketAware {
     @WebSocketAction(value = "send-global-server-message", schema = SendGlobalServerMessage.class)
     public void sendServerMessage(SendGlobalServerMessage schema) {
         final String serverName = schema.getServer();
-        final MessageType type = MessageType.fromString(schema.getType());
+        final MessageType message_type = MessageType.fromString(schema.getMessage_type());
         final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());
 
-        if (serverName != null && type != null) {
+        if (serverName != null && message_type != null) {
             FoundationServer server = Platform.getServer(serverName);
             if (server != null) {
-                processServerMessage(new ServerMessageContext(server, message, type));
+                processServerMessage(new ServerMessageContext(server, message, message_type));
             }
         }
     }
