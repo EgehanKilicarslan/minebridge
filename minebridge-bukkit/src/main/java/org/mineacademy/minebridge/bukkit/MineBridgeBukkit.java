@@ -106,6 +106,9 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 			Common.throwError(new FoException("Server name not found in server.properties"));
 		}
 
+		if ("all".equals(name))
+			Common.throwError(new FoException("Server name cannot be 'all'"));
+
 		Platform.setCustomServerName(name);
 	}
 
