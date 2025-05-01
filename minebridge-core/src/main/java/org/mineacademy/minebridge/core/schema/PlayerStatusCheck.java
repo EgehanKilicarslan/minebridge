@@ -16,7 +16,7 @@ public class PlayerStatusCheck extends BaseSchema {
     private final Boolean online;
 
     public PlayerStatusCheck(String username, String uuid, Boolean online) {
-        super("player-status-check");
+        super("player-status-check", false);
         this.username = username;
         this.uuid = uuid;
         this.online = online;

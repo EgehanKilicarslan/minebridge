@@ -13,6 +13,7 @@ import org.mineacademy.fo.MinecraftVersion.V;
 import org.mineacademy.fo.exception.FoException;
 import org.mineacademy.fo.platform.BukkitPlugin;
 import org.mineacademy.fo.platform.Platform;
+import org.mineacademy.minebridge.bukkit.actions.MessageActionHandler;
 import org.mineacademy.minebridge.bukkit.actions.PlayerActionHandler;
 import org.mineacademy.minebridge.bukkit.model.ServerType;
 import org.mineacademy.minebridge.core.settings.Settings;
@@ -57,7 +58,7 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 						new String[] { Platform.getCustomServerName() });
 
 				// Register handler classes with WebSocketAction annotations
-				webSocketClient.registerActionHandler(new PlayerActionHandler());
+				webSocketClient.registerActionHandler(new PlayerActionHandler(), new MessageActionHandler());
 
 				// Connect to the WebSocket server
 				webSocketClient.connect();

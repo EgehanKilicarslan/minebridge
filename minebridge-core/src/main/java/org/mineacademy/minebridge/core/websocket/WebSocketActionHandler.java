@@ -33,18 +33,19 @@ public class WebSocketActionHandler {
         Class<?> clazz = instance.getClass();
 
         for (Method method : clazz.getMethods()) {
-            WebSocketAction annotation = method.getAnnotation(WebSocketAction.class);
+            // Get all annotations instead of just one
+            WebSocketAction[] annotations = method.getAnnotationsByType(WebSocketAction.class);
 
-            if (annotation != null) {
+            for (WebSocketAction annotation : annotations) {
                 String action = annotation.value();
                 Class<? extends BaseSchema> schemaClass = annotation.schema();
 
                 actionMethods.put(action, new ActionMethod(instance, method, schemaClass));
+            }
 
-                // If instance is WebSocketAware, pass client reference
-                if (instance instanceof WebSocketAware) {
-                    ((WebSocketAware) instance).setClient(client);
-                }
+            // Only set the client once per instance, not per annotation
+            if (annotations.length > 0 && instance instanceof WebSocketAware) {
+                ((WebSocketAware) instance).setClient(client);
             }
         }
     }

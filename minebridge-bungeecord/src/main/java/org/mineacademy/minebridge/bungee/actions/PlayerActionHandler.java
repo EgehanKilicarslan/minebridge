@@ -1,6 +1,7 @@
 package org.mineacademy.minebridge.bungee.actions;
 
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.mineacademy.fo.debug.Debugger;
 import org.mineacademy.fo.platform.FoundationPlayer;
@@ -10,6 +11,8 @@ import org.mineacademy.minebridge.core.internal.WebSocketAware;
 import org.mineacademy.minebridge.core.schema.PlayerServerCheck;
 import org.mineacademy.minebridge.core.schema.PlayerStatusCheck;
 import org.mineacademy.minebridge.core.websocket.Client;
+
+import lombok.RequiredArgsConstructor;
 
 /**
  * Handles WebSocket actions related to player status on the BungeeCord server.
@@ -22,6 +25,26 @@ public class PlayerActionHandler implements WebSocketAware {
      * The WebSocket client used for sending responses.
      */
     private Client client;
+
+    /**
+     * Helper record to store player lookup parameters
+     */
+    @RequiredArgsConstructor
+    private static class PlayerLookupParams {
+        private final String username;
+        private final String uuid;
+
+        /**
+         * Gets the player based on the provided parameters
+         * 
+         * @return The found player or null if not found
+         */
+        public FoundationPlayer findPlayer() {
+            return username != null ? Platform.getPlayer(username)
+                    : uuid != null ? Platform.getPlayer(UUID.fromString(uuid))
+                            : null;
+        }
+    }
 
     /**
      * Sets the WebSocket client for this handler.
@@ -42,48 +65,52 @@ public class PlayerActionHandler implements WebSocketAware {
      */
     @WebSocketAction(value = "player-status-check", schema = PlayerStatusCheck.class)
     public void playerStatusCheck(PlayerStatusCheck schema) {
-        // Extract username and UUID from the schema
-        final String username = schema.getUsername();
-        final String uuid = schema.getUuid();
-
-        // Find player by username or UUID (if available)
-        final FoundationPlayer player = username != null ? Platform.getPlayer(username)
-                : uuid != null ? Platform.getPlayer(UUID.fromString(uuid)) : null;
-
-        // Create response schema
-        String response = new PlayerStatusCheck(
-                player != null ? player.getName() : username,
-                player != null ? player.getUniqueId().toString() : uuid,
-                player != null ? player.isPlayerOnline() : false).toJson();
-
-        // Log the response for debugging
-        Debugger.debug("websocket", "Sending player status response: " + response);
+        // Process the request and get the response
+        String response = processPlayerRequest(schema.getUsername(), schema.getUuid(),
+                (player) -> new PlayerStatusCheck(
+                        player != null ? player.getName() : schema.getUsername(),
+                        player != null ? player.getUniqueId().toString() : schema.getUuid(),
+                        player != null ? player.isPlayerOnline() : false).toJson());
 
         // Send the response
         client.send(response);
-
     }
 
     @WebSocketAction(value = "player-server-check", schema = PlayerServerCheck.class)
     public void playerServerCheck(PlayerServerCheck schema) {
-        // Extract username and UUID from the schema
-        final String username = schema.getUsername();
-        final String uuid = schema.getUuid();
-
-        // Find player by username or UUID (if available)
-        final FoundationPlayer player = username != null ? Platform.getPlayer(username)
-                : uuid != null ? Platform.getPlayer(UUID.fromString(uuid)) : null;
-
-        // Create response schema
-        String response = new PlayerServerCheck(
-                player != null ? player.getName() : username,
-                player != null ? player.getUniqueId().toString() : uuid,
-                player != null ? player.getServer().getName() : null).toJson();
-
-        // Log the response for debugging
-        Debugger.debug("websocket", "Sending player server response: " + response);
+        // Process the request and get the response
+        String response = processPlayerRequest(schema.getUsername(), schema.getUuid(),
+                (player) -> new PlayerServerCheck(
+                        player != null ? player.getName() : schema.getUsername(),
+                        player != null ? player.getUniqueId().toString() : schema.getUuid(),
+                        player != null ? player.getServer().getName() : null).toJson());
 
         // Send the response
         client.send(response);
+    }
+
+    /**
+     * Processes a player request by finding the player and generating a response
+     * 
+     * @param username          Username to look up
+     * @param uuid              UUID to look up
+     * @param responseGenerator Function to generate a response from the found
+     *                          player
+     * @return The JSON response
+     */
+    private String processPlayerRequest(String username, String uuid,
+            Function<FoundationPlayer, String> responseGenerator) {
+
+        // Find player by username or UUID
+        final PlayerLookupParams params = new PlayerLookupParams(username, uuid);
+        final FoundationPlayer player = params.findPlayer();
+
+        // Generate response
+        final String response = responseGenerator.apply(player);
+
+        // Log the response for debugging
+        Debugger.debug("websocket", "Sending player response: " + response);
+
+        return response;
     }
 }
