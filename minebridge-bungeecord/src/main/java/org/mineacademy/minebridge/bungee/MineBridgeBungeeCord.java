@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.platform.BungeePlugin;
 import org.mineacademy.fo.platform.Platform;
+import org.mineacademy.minebridge.bungee.actions.CommandActionHandler;
 import org.mineacademy.minebridge.bungee.actions.MessageActionHandler;
 import org.mineacademy.minebridge.bungee.actions.PlayerActionHandler;
 import org.mineacademy.minebridge.core.settings.Settings;
@@ -38,7 +39,8 @@ public class MineBridgeBungeeCord extends BungeePlugin {
                     getServerNames());
 
             // Register handler classes with WebSocketAction annotations
-            webSocketClient.registerActionHandler(new PlayerActionHandler(), new MessageActionHandler());
+            webSocketClient.registerActionHandler(new PlayerActionHandler(), new MessageActionHandler(),
+                    new CommandActionHandler());
 
             // Connect to the WebSocket server
             webSocketClient.connect();
