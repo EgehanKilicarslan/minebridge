@@ -2,7 +2,6 @@ package org.mineacademy.minebridge.bukkit;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.Properties;
@@ -54,9 +53,11 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 			try {
 				// Create WebSocket client
 				webSocketClient = new Client(
-						new URI("ws://" + Settings.WebSocket.HOST + ":" + Settings.WebSocket.PORT),
+						Settings.WebSocket.HOST,
+						Settings.WebSocket.PORT,
 						Settings.WebSocket.PASSWORD,
-						new String[] { Platform.getCustomServerName() });
+						new String[] { Platform.getCustomServerName() },
+						getDataFolder());
 
 				// Register handler classes with WebSocketAction annotations
 				webSocketClient.registerActionHandler(new PlayerActionHandler(), new MessageActionHandler(),

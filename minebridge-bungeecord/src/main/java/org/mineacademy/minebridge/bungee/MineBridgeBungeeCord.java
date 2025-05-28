@@ -1,6 +1,5 @@
 package org.mineacademy.minebridge.bungee;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.mineacademy.fo.Common;
@@ -34,9 +33,11 @@ public class MineBridgeBungeeCord extends BungeePlugin {
         try {
             // Create WebSocket client
             webSocketClient = new Client(
-                    new URI("ws://" + Settings.WebSocket.HOST + ":" + Settings.WebSocket.PORT),
+                    Settings.WebSocket.HOST,
+                    Settings.WebSocket.PORT,
                     Settings.WebSocket.PASSWORD,
-                    getServerNames());
+                    getServerNames(),
+                    getDataFolder());
 
             // Register handler classes with WebSocketAction annotations
             webSocketClient.registerActionHandler(new PlayerActionHandler(), new MessageActionHandler(),

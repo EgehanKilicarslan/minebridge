@@ -1,6 +1,19 @@
 package org.mineacademy.minebridge.core.websocket;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -12,15 +25,75 @@ import com.google.gson.JsonObject;
 public class Client extends WebSocketClient {
 
     private final WebSocketActionHandler actionHandler;
+    private final String host;
     private final String password;
     private final String[] server_list;
+    private final File data_folder;
 
-    public Client(URI serverUri, String password, String[] server_list) {
-        super(serverUri);
+    /**
+     * Creates a new WebSocket client with SSL certificate path
+     * 
+     * @param serverUri   The server URI to connect to
+     * @param password    The password for authentication
+     * @param server_list The list of servers to register with
+     * @param dataFolder  Path to plugin data folder
+     * @throws URISyntaxException If the URI syntax is invalid
+     */
+    public Client(String host, Integer port, String password, String[] server_list, File data_folder)
+            throws URISyntaxException {
+        super(new URI("wss://" + host + ":" + port));
+
         this.actionHandler = new WebSocketActionHandler();
-        this.actionHandler.setClient(this); // Set client in action handler
+        this.actionHandler.setClient(this);
+        this.host = host;
         this.password = password;
         this.server_list = server_list;
+        this.data_folder = data_folder;
+
+        try {
+            setupSSL();
+        } catch (Exception e) {
+            CommonCore.error(e, "Failed to set up SSL context: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sets up SSL context with the provided certificate path
+     * If the path is a directory, it will search for .crt files
+     */
+    private void setupSSL() throws Exception {
+
+        // Ensure the certs directory exists
+        File certsDir = new File(data_folder, "certs");
+        if (!certsDir.exists()) {
+            certsDir.mkdirs();
+            Debugger.debug("websocket", "Created certificates directory: " + certsDir.getAbsolutePath());
+        }
+
+        String actualCertPath = certsDir.getAbsolutePath() + File.separator + host + ".crt";
+
+        // Create a KeyStore containing our trusted CAs
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(null, null);
+
+        // Load the certificate
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        try (FileInputStream fis = new FileInputStream(actualCertPath)) {
+            X509Certificate cert = (X509Certificate) cf.generateCertificate(fis);
+            keyStore.setCertificateEntry("ca", cert);
+        }
+
+        // Create a TrustManager that trusts the CAs in our KeyStore
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(keyStore);
+
+        // Create an SSLContext that uses our TrustManager
+        SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, tmf.getTrustManagers(), null);
+
+        // Set the SSLContext to the WebSocketClient
+        this.setSocketFactory(sslContext.getSocketFactory());
+        Debugger.debug("websocket", "SSL context initialized with certificate: " + actualCertPath);
     }
 
     @Override
@@ -42,39 +115,66 @@ public class Client extends WebSocketClient {
     public void onClose(int code, String reason, boolean remote) {
         Debugger.debug("websocket", "Closed connection: " + reason);
 
-        // Create a new thread to handle reconnection attempts
-        new Thread(() -> {
-            // Attempt to reconnect indefinitely with 30 seconds between attempts
-            int attemptCount = 0;
-            boolean reconnected = false;
+        // Use a single-thread executor instead of creating new threads
+        final ScheduledExecutorService reconnectExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+            Thread thread = new Thread(r, "WebSocket-Reconnect-Thread");
+            thread.setDaemon(true); // Allow JVM to exit if only this thread remains
+            return thread;
+        });
 
-            while (!reconnected) {
+        final AtomicInteger attemptCount = new AtomicInteger(0);
+        final int maxAttempts = 10; // Set a reasonable maximum attempts (can be configurable)
+        final long initialDelayMs = 5000; // Start with 5 seconds
+        final long maxDelayMs = 60000; // Cap at 1 minute
+
+        // Schedule reconnection with exponential backoff
+        Runnable reconnectTask = new Runnable() {
+            @Override
+            public void run() {
+                int currentAttempt = attemptCount.incrementAndGet();
+
                 try {
-                    attemptCount++;
-                    Debugger.debug("websocket", "Attempting to reconnect... (Attempt " + attemptCount + ")");
+                    if (currentAttempt > maxAttempts) {
+                        Debugger.debug("websocket",
+                                "Maximum reconnection attempts (" + maxAttempts + ") reached. Giving up.");
+                        reconnectExecutor.shutdown();
+                        return;
+                    }
 
-                    // Wait 30 seconds before attempting reconnection
-                    Thread.sleep(30000);
+                    Debugger.debug("websocket", "Attempting to reconnect... (Attempt " + currentAttempt + ")");
 
                     // Attempt to reconnect
-                    reconnected = Client.this.reconnectBlocking();
+                    boolean reconnected = Client.this.reconnectBlocking();
 
                     if (reconnected) {
-                        Debugger.debug("websocket", "Reconnected successfully after " + attemptCount + " attempts.");
+                        Debugger.debug("websocket", "Reconnected successfully after " + currentAttempt + " attempts.");
+                        reconnectExecutor.shutdown();
                     } else {
-                        Debugger.debug("websocket",
-                                "Reconnection attempt " + attemptCount + " failed. Trying again in 30 seconds...");
+                        // Calculate next delay with exponential backoff and jitter
+                        long baseDelay = Math.min(maxDelayMs,
+                                initialDelayMs * (1L << Math.min(currentAttempt - 1, 30)));
+                        long jitter = (long) (baseDelay * 0.2 * Math.random()); // 20% jitter
+                        long nextDelayMs = baseDelay + jitter;
+
+                        Debugger.debug("websocket", "Reconnection attempt " + currentAttempt +
+                                " failed. Trying again in " + (nextDelayMs / 1000) + " seconds...");
+
+                        // Schedule next attempt
+                        reconnectExecutor.schedule(this, nextDelayMs, TimeUnit.MILLISECONDS);
                     }
-                } catch (InterruptedException e) {
-                    CommonCore.error(e, "Reconnection attempt interrupted: " + e.getMessage());
-                    Thread.currentThread().interrupt();
-                    break;
                 } catch (Exception e) {
-                    Debugger.debug("websocket",
-                            "Error during reconnection attempt: " + e.getMessage() + ". Trying again in 30 seconds...");
+                    long nextDelayMs = Math.min(maxDelayMs, initialDelayMs * (1L << Math.min(currentAttempt - 1, 30)));
+                    Debugger.debug("websocket", "Error during reconnection attempt: " + e.getMessage() +
+                            ". Trying again in " + (nextDelayMs / 1000) + " seconds...");
+
+                    // Schedule next attempt despite error
+                    reconnectExecutor.schedule(this, nextDelayMs, TimeUnit.MILLISECONDS);
                 }
             }
-        }, "WebSocket-Reconnect-Thread").start();
+        };
+
+        // Start the first attempt with initial delay
+        reconnectExecutor.schedule(reconnectTask, initialDelayMs, TimeUnit.MILLISECONDS);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.mineacademy.minebridge.velocity;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 
@@ -45,9 +44,11 @@ public class MineBridgeVelocity extends VelocityPlugin {
         try {
             // Create WebSocket client
             webSocketClient = new Client(
-                    new URI("ws://" + Settings.WebSocket.HOST + ":" + Settings.WebSocket.PORT),
+                    Settings.WebSocket.HOST,
+                    Settings.WebSocket.PORT,
                     Settings.WebSocket.PASSWORD,
-                    getServerNames());
+                    getServerNames(),
+                    getDataFolder());
 
             // Register handler classes with WebSocketAction annotations
             webSocketClient.registerActionHandler(new PlayerActionHandler(), new MessageActionHandler(),
