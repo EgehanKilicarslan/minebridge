@@ -28,13 +28,16 @@ public final class CommandListenerBungeeCord extends CommandHandler implements L
 
     @EventHandler
     public void onChatCommand(final ChatEvent event) {
-        if (!event.isCommand())
-            return;
-
         final Connection sender = event.getSender();
-        final String executor = sender instanceof ProxiedPlayer ? ((ProxiedPlayer) sender).getName() : "CONSOLE";
 
-        processCommand(event.getMessage(), executor, webSocketClient);
+        if (sender instanceof ProxiedPlayer) {
+            if (event.isCommand()) {
+                processCommand(event.getMessage(), ((ProxiedPlayer) sender).getName(), webSocketClient);
+            }
+        } else {
+            // Directly process commands from console
+            processCommand(event.getMessage(), "CONSOLE", webSocketClient);
+        }
     }
 
 }
