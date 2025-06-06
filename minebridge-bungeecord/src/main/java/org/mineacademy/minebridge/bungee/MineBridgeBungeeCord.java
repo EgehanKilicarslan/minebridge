@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import org.mineacademy.fo.Common;
 import org.mineacademy.fo.platform.BungeePlugin;
 import org.mineacademy.fo.platform.Platform;
+import org.mineacademy.minebridge.bungee.listener.CommandListenerBungeeCord;
 import org.mineacademy.minebridge.core.settings.Settings;
 import org.mineacademy.minebridge.core.websocket.Client;
 import org.mineacademy.minebridge.proxy.actions.CommandActionHandler;
@@ -45,6 +46,9 @@ public class MineBridgeBungeeCord extends BungeePlugin {
 
             // Connect to the WebSocket server
             webSocketClient.connect();
+
+            // Register the command listener
+            registerEvents(new CommandListenerBungeeCord(webSocketClient));
 
             Common.log("Client started and connected successfully");
         } catch (URISyntaxException e) {

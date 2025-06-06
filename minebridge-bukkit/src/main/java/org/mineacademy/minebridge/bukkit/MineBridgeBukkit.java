@@ -15,6 +15,7 @@ import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.minebridge.bukkit.actions.CommandActionHandler;
 import org.mineacademy.minebridge.bukkit.actions.MessageActionHandler;
 import org.mineacademy.minebridge.bukkit.actions.PlayerActionHandler;
+import org.mineacademy.minebridge.bukkit.listener.CommandListenerBukkit;
 import org.mineacademy.minebridge.bukkit.model.ServerType;
 import org.mineacademy.minebridge.core.settings.Settings;
 import org.mineacademy.minebridge.core.websocket.Client;
@@ -65,6 +66,9 @@ public final class MineBridgeBukkit extends BukkitPlugin {
 
 				// Connect to the WebSocket server
 				webSocketClient.connect();
+
+				// Register command listeners
+				registerEvents(new CommandListenerBukkit(webSocketClient));
 
 				Common.log("Client started and connected successfully");
 			} catch (URISyntaxException e) {

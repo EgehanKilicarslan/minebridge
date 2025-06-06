@@ -1,14 +1,64 @@
 # -------------------------------------------------------------------------------------------------
 # WebSocket configuration for the communication between plugin components.
 #
-# Host: The host address to bind the WebSocket server to.
-# Port: The port number on which the WebSocket server will listen for connections.
-# Password: The password required to authenticate WebSocket connections.
+# host: The host address to bind the WebSocket server to.
+# port: The port number on which the WebSocket server will listen for connections.
+# password: The password required to authenticate WebSocket connections.
 # -------------------------------------------------------------------------------------------------
-WebSocket:
-  Host: ""
-  Port: null
-  Password: ""
+websocket:
+  host: ""
+  port: null
+  password: ""
+
+# -------------------------------------------------------------------------------------------------
+# Aliases configuration for commands provided by the plugin.
+#
+# This section defines alternative command names that players can use to execute the same function.
+# Each base command can have multiple alternative names (aliases) associated with it.
+# Players can use any of the defined aliases to execute the corresponding command functionality.
+# -------------------------------------------------------------------------------------------------
+aliases:
+  kick:
+    - "kick"
+    - "ekick"
+  ban:
+    - "ban"
+    - "eban"
+  tempban:
+    - "tempban"
+    - "etempban"
+  unban:
+    - "unban"
+    - "pardon"
+    - "eunban"
+    - "epardon"
+  mute:
+    - "mute"
+    - "emute"
+    - "silence"
+    - "esilence"
+  unmute:
+    - "mute"
+    - "emute"
+    - "silence"
+    - "esilence"
+
+# -------------------------------------------------------------------------------------------------
+# Syntax configuration for commands provided by the plugin.
+#
+# This section defines the command structure and expected parameters for each command.
+# Parameter notation:
+# - {alias}: Will be replaced with any of the valid aliases for the command
+# - <parameter>: Required parameter (indicated by angle brackets)
+# - [parameter]: Optional parameter (indicated by square brackets)
+# -------------------------------------------------------------------------------------------------
+syntax:
+  kick: "/{alias} <player> [reason]"
+  ban: "/{alias} <player> [reason]"
+  tempban: "/{alias} <player> <duration> [reason]"
+  unban: "/{alias} <player>"
+  mute: "/{alias} <player> <duration> [reason]"
+  unmute: "/{alias} <player>"
 
 # -------------------------------------------------------------------------------------------------
 # A list of parts of the plugin that will print log messages. Useful to see what the plugin does
@@ -19,4 +69,4 @@ WebSocket:
 #
 # Available: websocket
 # -------------------------------------------------------------------------------------------------
-Debug: []
+debug: []
