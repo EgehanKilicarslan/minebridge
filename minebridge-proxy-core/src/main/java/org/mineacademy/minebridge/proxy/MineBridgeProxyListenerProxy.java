@@ -17,7 +17,7 @@ public final class MineBridgeProxyListenerProxy extends ProxyListener {
     private String action;
 
     @Getter
-    private final static MineBridgeProxyListenerProxy instance = new MineBridgeProxyListenerProxy();
+    private static final MineBridgeProxyListenerProxy instance = new MineBridgeProxyListenerProxy();
 
     private MineBridgeProxyListenerProxy() {
         super(ProxyConstants.MINEBRIDGE_CHANNEL, MineBridgeProxyMessage.class);
