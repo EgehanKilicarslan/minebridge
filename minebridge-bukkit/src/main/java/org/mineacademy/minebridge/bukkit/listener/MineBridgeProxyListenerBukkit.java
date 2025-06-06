@@ -12,7 +12,7 @@ import lombok.Getter;
 public final class MineBridgeProxyListenerBukkit extends ProxyListener {
 
     @Getter
-    private final static MineBridgeProxyListenerBukkit instance = new MineBridgeProxyListenerBukkit();
+    private static final MineBridgeProxyListenerBukkit instance = new MineBridgeProxyListenerBukkit();
 
     private MineBridgeProxyMessage packet;
 
