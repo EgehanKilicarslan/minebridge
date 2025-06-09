@@ -22,8 +22,8 @@ public abstract class CommandHandler {
     private static final String CMD_BAN = "ban";
     private static final String CMD_TEMPBAN = "tempban";
     private static final String CMD_UNBAN = "unban";
-    private static final String CMD_MUTE = "mute";
-    private static final String CMD_UNMUTE = "unmute";
+    private static final String CMD_TIMEOUT = "timeout";
+    private static final String CMD_UNTIMEOUT = "untimeout";
 
     // Parameter constants
     private static final String PARAM_TARGET = "target";
@@ -65,8 +65,8 @@ public abstract class CommandHandler {
         registerCommand(CMD_BAN, PARAM_TARGET);
         registerCommand(CMD_TEMPBAN, PARAM_TARGET, PARAM_DURATION);
         registerCommand(CMD_UNBAN, PARAM_TARGET);
-        registerCommand(CMD_MUTE, PARAM_TARGET, PARAM_DURATION);
-        registerCommand(CMD_UNMUTE, PARAM_TARGET);
+        registerCommand(CMD_TIMEOUT, PARAM_TARGET, PARAM_DURATION);
+        registerCommand(CMD_UNTIMEOUT, PARAM_TARGET);
     }
 
     /**

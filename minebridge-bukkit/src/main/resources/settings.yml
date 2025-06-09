@@ -32,12 +32,12 @@ aliases:
     - "pardon"
     - "eunban"
     - "epardon"
-  mute:
+  timeout:
     - "mute"
     - "emute"
     - "silence"
     - "esilence"
-  unmute:
+  untimeout:
     - "mute"
     - "emute"
     - "silence"
@@ -57,8 +57,8 @@ syntax:
   ban: "{alias} <target> [reason]"
   tempban: "{alias} <target> <duration> [reason]"
   unban: "{alias} <target>"
-  mute: "{alias} <target> <duration> [reason]"
-  unmute: "{alias} <target>"
+  timeout: "{alias} <target> <duration> [reason]"
+  untimeout: "{alias} <target>"
 
 # -------------------------------------------------------------------------------------------------
 # A list of parts of the plugin that will print log messages. Useful to see what the plugin does
