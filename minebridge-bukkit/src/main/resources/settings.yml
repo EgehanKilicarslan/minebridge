@@ -53,12 +53,12 @@ aliases:
 # - [parameter]: Optional parameter (indicated by square brackets)
 # -------------------------------------------------------------------------------------------------
 syntax:
-  kick: "{alias} <player> [reason]"
-  ban: "{alias} <player> [reason]"
-  tempban: "{alias} <player> <duration> [reason]"
-  unban: "{alias} <player>"
-  mute: "{alias} <player> <duration> [reason]"
-  unmute: "{alias} <player>"
+  kick: "{alias} <target> [reason]"
+  ban: "{alias} <target> [reason]"
+  tempban: "{alias} <target> <duration> [reason]"
+  unban: "{alias} <target>"
+  mute: "{alias} <target> <duration> [reason]"
+  unmute: "{alias} <target>"
 
 # -------------------------------------------------------------------------------------------------
 # A list of parts of the plugin that will print log messages. Useful to see what the plugin does

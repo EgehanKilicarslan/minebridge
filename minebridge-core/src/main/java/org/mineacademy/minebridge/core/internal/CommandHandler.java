@@ -26,7 +26,7 @@ public abstract class CommandHandler {
     private static final String CMD_UNMUTE = "unmute";
 
     // Parameter constants
-    private static final String PARAM_PLAYER = "player";
+    private static final String PARAM_TARGET = "target";
     private static final String PARAM_DURATION = "duration";
     private static final String PARAM_REASON = "reason";
 
@@ -61,12 +61,12 @@ public abstract class CommandHandler {
      */
     protected void registerCommands() {
         // Register commands with their required parameters
-        registerCommand(CMD_KICK, PARAM_PLAYER);
-        registerCommand(CMD_BAN, PARAM_PLAYER);
-        registerCommand(CMD_TEMPBAN, PARAM_PLAYER, PARAM_DURATION);
-        registerCommand(CMD_UNBAN, PARAM_PLAYER);
-        registerCommand(CMD_MUTE, PARAM_PLAYER, PARAM_DURATION);
-        registerCommand(CMD_UNMUTE, PARAM_PLAYER);
+        registerCommand(CMD_KICK, PARAM_TARGET);
+        registerCommand(CMD_BAN, PARAM_TARGET);
+        registerCommand(CMD_TEMPBAN, PARAM_TARGET, PARAM_DURATION);
+        registerCommand(CMD_UNBAN, PARAM_TARGET);
+        registerCommand(CMD_MUTE, PARAM_TARGET, PARAM_DURATION);
+        registerCommand(CMD_UNMUTE, PARAM_TARGET);
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class CommandHandler {
         final Map<String, Object> params = new HashMap<>(5); // Initial capacity estimation
 
         // Get all needed parameters in one pass
-        params.put(PARAM_PLAYER, parsedCommand.getParameter(PARAM_PLAYER));
+        params.put(PARAM_TARGET, parsedCommand.getParameter(PARAM_TARGET));
 
         if (parsedCommand.hasParameter(PARAM_DURATION)) {
             params.put(PARAM_DURATION, parsedCommand.getParameter(PARAM_DURATION));
