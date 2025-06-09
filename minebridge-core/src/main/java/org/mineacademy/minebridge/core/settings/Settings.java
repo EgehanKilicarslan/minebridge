@@ -16,7 +16,7 @@ public class Settings extends SimpleSettings {
 
     // Using immutable set for better performance and safety
     private static final Set<String> COMMAND_LIST = Collections.unmodifiableSet(
-            new HashSet<>(Arrays.asList("kick", "ban", "tempban", "unban", "mute", "unmute")));
+            new HashSet<>(Arrays.asList("kick", "ban", "tempban", "unban", "timeout", "untimeout")));
 
     // Cached uncommented sections list
     private static final List<String> UNCOMMENTED_SECTIONS = Collections.unmodifiableList(Arrays.asList("websocket"));
