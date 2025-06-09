@@ -337,6 +337,44 @@ public final class CommandParser {
             return combined.toString();
         }
 
+        /**
+         * Gets a combined parameter string starting from a named parameter.
+         * Especially useful for parameters like "reason" that may contain multiple
+         * words.
+         *
+         * @param paramName The name of the parameter to start from
+         * @return The combined parameter string or null if the named parameter isn't
+         *         found
+         */
+        public String getCombinedNamedParameter(String paramName) {
+            if (!hasParameter(paramName)) {
+                return null;
+            }
+
+            // Find the parameter index in the original parameters list
+            String paramNameLower = paramName.toLowerCase(Locale.ROOT);
+            List<SyntaxParam> syntaxParams = PARSED_SYNTAX_CACHE.get(commandType);
+            if (syntaxParams == null) {
+                return getParameter(paramName);
+            }
+
+            // Find the index of this named parameter
+            int paramIndex = -1;
+            for (int i = 0; i < syntaxParams.size() && i < parameters.size(); i++) {
+                if (syntaxParams.get(i).name.toLowerCase(Locale.ROOT).equals(paramNameLower)) {
+                    paramIndex = i;
+                    break;
+                }
+            }
+
+            if (paramIndex == -1) {
+                return getParameter(paramName);
+            }
+
+            // Get the combined parameter from this index
+            return getCombinedParameter(paramIndex);
+        }
+
         @Override
         public String toString() {
             return String.format("ParsedCommand[type=%s, alias=%s, params=%s, namedParams=%s]",

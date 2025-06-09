@@ -33,6 +33,9 @@ public abstract class CommandHandler {
     // Expected command count for initial HashMap capacity
     private static final int EXPECTED_COMMAND_COUNT = 6;
 
+    // Shared empty set for commands with no parameters
+    private static final Set<String> EMPTY_PARAMS = Collections.emptySet();
+
     // Command registry map for O(1) command lookup, initialized with capacity
     private final Map<String, CommandSpec> commandSpecs = new HashMap<>(EXPECTED_COMMAND_COUNT * 4 / 3 + 1);
 
@@ -43,9 +46,10 @@ public abstract class CommandHandler {
         final Set<String> requiredParams;
 
         CommandSpec(String... requiredParams) {
-            // Initialize with expected size for better performance
-            this.requiredParams = requiredParams.length > 0 ? new HashSet<>(Arrays.asList(requiredParams))
-                    : Collections.emptySet();
+            // Use empty set singleton when no parameters are required
+            this.requiredParams = requiredParams.length > 0
+                    ? Collections.unmodifiableSet(new HashSet<>(Arrays.asList(requiredParams)))
+                    : EMPTY_PARAMS;
         }
     }
 
@@ -101,31 +105,55 @@ public abstract class CommandHandler {
             return false;
 
         // Validate required parameters
-        for (final String param : spec.requiredParams) {
-            if (parsedCommand.getParameter(param) == null || parsedCommand.getParameter(param).isEmpty()) {
-                return false;
-            }
+        if (!validateParameters(parsedCommand, spec.requiredParams)) {
+            return false;
         }
 
-        // Build parameters map directly from parsed command - more efficient
-        final Map<String, Object> params = new HashMap<>(5); // Initial capacity estimation
-
-        // Get all needed parameters in one pass
-        params.put(PARAM_TARGET, parsedCommand.getParameter(PARAM_TARGET));
-
-        if (parsedCommand.hasParameter(PARAM_DURATION)) {
-            params.put(PARAM_DURATION, parsedCommand.getParameter(PARAM_DURATION));
-        }
-
-        final String reason = parsedCommand.getParameter(PARAM_REASON);
-        if (reason != null) {
-            params.put(PARAM_REASON, reason);
-        }
+        // Extract parameters efficiently
+        final Map<String, Object> params = extractParameters(parsedCommand);
 
         // Create and send command
         final CommandExecuted commandExecuted = new CommandExecuted(commandType, executor, params);
         webSocketClient.send(commandExecuted.toJson());
 
         return true;
+    }
+
+    /**
+     * Validate that all required parameters are present
+     */
+    private boolean validateParameters(ParsedCommand command, Set<String> requiredParams) {
+        for (final String param : requiredParams) {
+            String value = command.getParameter(param);
+            if (value == null || value.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Extract needed parameters from the parsed command
+     */
+    private Map<String, Object> extractParameters(ParsedCommand command) {
+        // Initial capacity with expected parameter count to avoid resizing
+        final Map<String, Object> params = new HashMap<>(4);
+
+        String target = command.getParameter(PARAM_TARGET);
+        if (target != null && !target.isEmpty()) {
+            params.put(PARAM_TARGET, target);
+        }
+
+        String duration = command.getParameter(PARAM_DURATION);
+        if (duration != null && !duration.isEmpty()) {
+            params.put(PARAM_DURATION, duration);
+        }
+
+        String reason = command.getCombinedNamedParameter(PARAM_REASON);
+        if (reason != null && !reason.isEmpty()) {
+            params.put(PARAM_REASON, reason);
+        }
+
+        return params;
     }
 }
