@@ -68,9 +68,9 @@ public class MessageActionHandler implements WebSocketAware {
     }
 
     @WebSocketAction(value = "send-player-message", schema = SendPlayerMessage.class)
-    public void handlePlayerMessage(SendPlayerMessage schema) {
-        final String username = schema.getUsername();
-        final String uuid = schema.getUuid();
+    public void handlePlayerMessage(SendPlayerMessage data) {
+        final String username = data.getUsername();
+        final String uuid = data.getUuid();
 
         final Player player = username != null ? PlayerUtil.getPlayerByNick(username, false)
                 : uuid != null ? Remain.getPlayerByUUID(UUID.fromString(uuid))
@@ -80,12 +80,12 @@ public class MessageActionHandler implements WebSocketAware {
             return;
         }
 
-        final MessageType message_type = MessageType.fromString(schema.getMessage_type());
+        final MessageType message_type = MessageType.fromString(data.getMessage_type());
         if (message_type == null) {
             return;
         }
 
-        final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());
+        final SimpleComponent message = SimpleComponent.fromMiniAmpersand(data.getMessage());
         final BiConsumer<Player, SimpleComponent> action = PLAYER_MESSAGE_FUNCTIONS.get(message_type);
 
         if (action != null) {
@@ -95,13 +95,13 @@ public class MessageActionHandler implements WebSocketAware {
 
     @WebSocketAction(value = "send-global-message", schema = SendGlobalMessage.class)
     @WebSocketAction(value = "send-server-message", schema = SendGlobalMessage.class)
-    public void handleGlobalAndServerMessage(SendGlobalMessage schema) {
-        final MessageType message_type = MessageType.fromString(schema.getMessage_type());
+    public void handleGlobalAndServerMessage(SendGlobalMessage data) {
+        final MessageType message_type = MessageType.fromString(data.getMessage_type());
         if (message_type == null) {
             return;
         }
 
-        final SimpleComponent message = SimpleComponent.fromMiniAmpersand(schema.getMessage());
+        final SimpleComponent message = SimpleComponent.fromMiniAmpersand(data.getMessage());
         final Consumer<SimpleComponent> action = GLOBAL_MESSAGE_FUNCTIONS.get(message_type);
 
         if (action != null) {

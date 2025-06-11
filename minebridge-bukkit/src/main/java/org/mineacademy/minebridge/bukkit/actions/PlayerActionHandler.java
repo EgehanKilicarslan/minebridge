@@ -61,15 +61,15 @@ public class PlayerActionHandler implements WebSocketAware {
      * This method checks if a player is online based on username or UUID,
      * then sends back the status information.
      * 
-     * @param schema The schema containing request data (username and/or UUID)
+     * @param data The schema containing request data (username and/or UUID)
      */
     @WebSocketAction(value = "player-status-check", schema = PlayerStatusCheck.class)
-    public void playerStatusCheck(PlayerStatusCheck schema) {
+    public void playerStatusCheck(PlayerStatusCheck data) {
         // Process the request and get the response
-        String response = processPlayerRequest(schema.getUsername(), schema.getUuid(),
+        String response = processPlayerRequest(data.getUsername(), data.getUuid(),
                 (player) -> new PlayerStatusCheck(
-                        player != null ? player.getName() : schema.getUsername(),
-                        player != null ? player.getUniqueId().toString() : schema.getUuid(),
+                        player != null ? player.getName() : data.getUsername(),
+                        player != null ? player.getUniqueId().toString() : data.getUuid(),
                         player != null && player.isConnected()).toJson());
 
         // Send the response

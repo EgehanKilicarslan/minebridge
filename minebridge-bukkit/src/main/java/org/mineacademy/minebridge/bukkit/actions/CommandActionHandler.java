@@ -27,14 +27,14 @@ public class CommandActionHandler implements WebSocketAware {
     }
 
     @WebSocketAction(value = "dispatch-command", schema = DispatchCommand.class)
-    public void dispatchCommand(DispatchCommand schema) {
-        for (String command : schema.getCommands())
+    public void dispatchCommand(DispatchCommand data) {
+        for (String command : data.getCommands())
             Platform.dispatchConsoleCommand(null, command);
     }
 
     @WebSocketAction(value = "command-executed", schema = CommandExecuted.class)
-    public void commandExecuted(CommandExecuted schema) {
-        final String commandString = CommandParser.compileCommand(schema.getCommand_type(), schema.getArgs());
+    public void commandExecuted(CommandExecuted data) {
+        final String commandString = CommandParser.compileCommand(data.getCommand_type(), data.getArgs());
 
         if (commandString == null || commandString.isEmpty()) {
             return; // Ignore empty commands
