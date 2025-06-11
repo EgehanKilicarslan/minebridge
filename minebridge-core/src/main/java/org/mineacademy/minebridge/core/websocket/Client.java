@@ -10,6 +10,7 @@ import java.security.cert.X509Certificate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.net.ssl.SSLContext;
@@ -29,6 +30,16 @@ public class Client extends WebSocketClient {
     private final String password;
     private final String[] server_list;
     private final File data_folder;
+
+    // Static executor for all reconnection attempts
+    private static final ScheduledExecutorService reconnectExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread thread = new Thread(r, "WebSocket-Reconnect-Thread");
+        thread.setDaemon(true);
+        return thread;
+    });
+
+    // Flag to track if reconnection is in progress
+    private final AtomicBoolean reconnecting = new AtomicBoolean(false);
 
     /**
      * Creates a new WebSocket client with SSL certificate path
@@ -115,15 +126,14 @@ public class Client extends WebSocketClient {
     public void onClose(int code, String reason, boolean remote) {
         Debugger.debug("websocket", "Closed connection: " + reason);
 
-        // Use a single-thread executor instead of creating new threads
-        final ScheduledExecutorService reconnectExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
-            Thread thread = new Thread(r, "WebSocket-Reconnect-Thread");
-            thread.setDaemon(true); // Allow JVM to exit if only this thread remains
-            return thread;
-        });
+        // Don't attempt to reconnect if we're already trying
+        if (!reconnecting.compareAndSet(false, true)) {
+            Debugger.debug("websocket", "Reconnection already in progress, skipping new attempt");
+            return;
+        }
 
         final AtomicInteger attemptCount = new AtomicInteger(0);
-        final int maxAttempts = 10; // Set a reasonable maximum attempts (can be configurable)
+        final int maxAttempts = 10; // Set a reasonable maximum attempts
         final long initialDelayMs = 5000; // Start with 5 seconds
         final long maxDelayMs = 60000; // Cap at 1 minute
 
@@ -137,18 +147,25 @@ public class Client extends WebSocketClient {
                     if (currentAttempt > maxAttempts) {
                         Debugger.debug("websocket",
                                 "Maximum reconnection attempts (" + maxAttempts + ") reached. Giving up.");
-                        reconnectExecutor.shutdown();
+                        reconnecting.set(false);
                         return;
                     }
 
                     Debugger.debug("websocket", "Attempting to reconnect... (Attempt " + currentAttempt + ")");
+
+                    // Check if we're already connected somehow
+                    if (Client.this.isOpen()) {
+                        Debugger.debug("websocket", "Connection is already open, canceling reconnection attempts");
+                        reconnecting.set(false);
+                        return;
+                    }
 
                     // Attempt to reconnect
                     boolean reconnected = Client.this.reconnectBlocking();
 
                     if (reconnected) {
                         Debugger.debug("websocket", "Reconnected successfully after " + currentAttempt + " attempts.");
-                        reconnectExecutor.shutdown();
+                        reconnecting.set(false);
                     } else {
                         // Calculate next delay with exponential backoff and jitter
                         long baseDelay = Math.min(maxDelayMs,

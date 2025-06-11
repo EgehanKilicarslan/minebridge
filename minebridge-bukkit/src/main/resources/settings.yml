@@ -34,14 +34,8 @@ aliases:
     - "epardon"
   timeout:
     - "mute"
-    - "emute"
-    - "silence"
-    - "esilence"
   untimeout:
-    - "mute"
     - "emute"
-    - "silence"
-    - "esilence"
 
 # -------------------------------------------------------------------------------------------------
 # Syntax configuration for commands provided by the plugin.
