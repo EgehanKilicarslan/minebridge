@@ -3,7 +3,9 @@ package org.mineacademy.minebridge.bukkit.actions;
 import org.mineacademy.fo.platform.Platform;
 import org.mineacademy.minebridge.core.annotation.WebSocketAction;
 import org.mineacademy.minebridge.core.internal.WebSocketAware;
+import org.mineacademy.minebridge.core.schema.CommandExecuted;
 import org.mineacademy.minebridge.core.schema.DispatchCommand;
+import org.mineacademy.minebridge.core.utils.CommandParser;
 import org.mineacademy.minebridge.core.websocket.Client;
 
 @SuppressWarnings("unused")
@@ -28,5 +30,16 @@ public class CommandActionHandler implements WebSocketAware {
     public void dispatchCommand(DispatchCommand schema) {
         for (String command : schema.getCommands())
             Platform.dispatchConsoleCommand(null, command);
+    }
+
+    @WebSocketAction(value = "command-executed", schema = CommandExecuted.class)
+    public void commandExecuted(CommandExecuted schema) {
+        final String commandString = CommandParser.compileCommand(schema.getCommand_type(), schema.getArgs());
+
+        if (commandString == null || commandString.isEmpty()) {
+            return; // Ignore empty commands
+        }
+
+        Platform.dispatchConsoleCommand(null, commandString);
     }
 }

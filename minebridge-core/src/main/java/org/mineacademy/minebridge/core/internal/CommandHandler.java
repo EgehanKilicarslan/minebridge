@@ -110,7 +110,7 @@ public abstract class CommandHandler {
         }
 
         // Extract parameters efficiently
-        final Map<String, Object> params = extractParameters(parsedCommand);
+        final Map<String, String> params = extractParameters(parsedCommand);
 
         // Create and send command
         final CommandExecuted commandExecuted = new CommandExecuted(commandType, executor, params);
@@ -135,9 +135,9 @@ public abstract class CommandHandler {
     /**
      * Extract needed parameters from the parsed command
      */
-    private Map<String, Object> extractParameters(ParsedCommand command) {
+    private Map<String, String> extractParameters(ParsedCommand command) {
         // Initial capacity with expected parameter count to avoid resizing
-        final Map<String, Object> params = new HashMap<>(4);
+        final Map<String, String> params = new HashMap<>(4);
 
         String target = command.getParameter(PARAM_TARGET);
         if (target != null && !target.isEmpty()) {

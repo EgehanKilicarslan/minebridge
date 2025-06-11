@@ -15,16 +15,16 @@ public class CommandExecuted extends BaseSchema {
     private final String executor;
 
     @Getter
-    private final Map<String, Object> args;
+    private final Map<String, String> args;
 
-    public CommandExecuted(String command_type, String executor, Map<String, Object> args, String server) {
+    public CommandExecuted(String command_type, String executor, Map<String, String> args, String server) {
         super("command-executed", server);
         this.command_type = command_type;
         this.executor = executor;
         this.args = args;
     }
 
-    public CommandExecuted(String command_type, String executor, Map<String, Object> args) {
+    public CommandExecuted(String command_type, String executor, Map<String, String> args) {
         super("command-executed");
         this.command_type = command_type;
         this.executor = executor;

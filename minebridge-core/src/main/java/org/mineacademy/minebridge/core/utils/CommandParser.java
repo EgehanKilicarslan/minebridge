@@ -186,6 +186,132 @@ public final class CommandParser {
     }
 
     /**
+     * Compiles a command string from a command type and named parameters.
+     * 
+     * @param commandType The command type to compile
+     * @param parameters  Map of parameter names to their values
+     * @return The compiled command string, or null if the command type doesn't
+     *         exist
+     */
+    public static String compileCommand(String commandType, Map<String, String> parameters) {
+        if (!SYNTAX.containsKey(commandType)) {
+            return null;
+        }
+
+        // Get the primary alias for this command
+        String alias = getPrimaryAlias(commandType);
+        if (alias == null) {
+            return null;
+        }
+
+        // Get syntax parameters in order
+        List<SyntaxParam> syntaxParams = PARSED_SYNTAX_CACHE.get(commandType);
+
+        StringBuilder commandBuilder = new StringBuilder();
+        commandBuilder.append('/').append(alias);
+
+        // Add parameters in the correct order according to syntax
+        for (SyntaxParam param : syntaxParams) {
+            String paramName = param.name.toLowerCase(Locale.ROOT);
+            String value = parameters.get(paramName);
+
+            // Skip optional parameters if not provided
+            if (value == null) {
+                if (param.required) {
+                    // Missing required parameter
+                    return null;
+                }
+                continue;
+            }
+
+            // Add the parameter
+            commandBuilder.append(' ');
+
+            // If parameter contains spaces or special characters, wrap in quotes
+            if (value.contains(" ") || value.contains("\"")) {
+                // Escape any quotes in the value
+                String escapedValue = value.replace("\"", "\\\"");
+                commandBuilder.append('"').append(escapedValue).append('"');
+            } else {
+                commandBuilder.append(value);
+            }
+        }
+
+        return commandBuilder.toString();
+    }
+
+    /**
+     * Compiles a command string from a command type and ordered parameters.
+     * 
+     * @param commandType The command type to compile
+     * @param parameters  List of parameter values in order
+     * @return The compiled command string, or null if the command type doesn't
+     *         exist
+     */
+    public static String compileCommand(String commandType, List<String> parameters) {
+        if (!SYNTAX.containsKey(commandType)) {
+            return null;
+        }
+
+        // Get the primary alias for this command
+        String alias = getPrimaryAlias(commandType);
+        if (alias == null) {
+            return null;
+        }
+
+        // Get syntax parameters to check required parameters
+        List<SyntaxParam> syntaxParams = PARSED_SYNTAX_CACHE.get(commandType);
+
+        // Count required parameters
+        int requiredParams = 0;
+        for (SyntaxParam param : syntaxParams) {
+            if (param.required) {
+                requiredParams++;
+            }
+        }
+
+        // Check if we have enough parameters
+        if (parameters.size() < requiredParams) {
+            return null;
+        }
+
+        StringBuilder commandBuilder = new StringBuilder();
+        commandBuilder.append('/').append(alias);
+
+        // Add all provided parameters
+        for (String value : parameters) {
+            commandBuilder.append(' ');
+
+            // If parameter contains spaces or special characters, wrap in quotes
+            if (value.contains(" ") || value.contains("\"")) {
+                // Escape any quotes in the value
+                String escapedValue = value.replace("\"", "\\\"");
+                commandBuilder.append('"').append(escapedValue).append('"');
+            } else {
+                commandBuilder.append(value);
+            }
+        }
+
+        return commandBuilder.toString();
+    }
+
+    /**
+     * Gets the primary alias for a command type.
+     * Uses the first alias in the set as the primary.
+     * 
+     * @param commandType The command type
+     * @return The primary alias, or null if the command type has no aliases
+     */
+    private static String getPrimaryAlias(String commandType) {
+        Set<String> aliases = ALIASES.get(commandType);
+        if (aliases == null || aliases.isEmpty()) {
+            return null;
+        }
+        // Return the first alias in the set
+        return aliases.iterator().next();
+    }
+
+    /**
      * Helper class to represent a parameter in the command syntax.
      */
     private static class SyntaxParam {

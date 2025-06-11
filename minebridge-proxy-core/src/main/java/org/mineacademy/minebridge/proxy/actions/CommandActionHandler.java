@@ -9,7 +9,9 @@ import org.mineacademy.fo.proxy.message.OutgoingMessage;
 import org.mineacademy.minebridge.core.annotation.WebSocketAction;
 import org.mineacademy.minebridge.core.internal.WebSocketAware;
 import org.mineacademy.minebridge.core.model.MineBridgeProxyMessage;
+import org.mineacademy.minebridge.core.schema.CommandExecuted;
 import org.mineacademy.minebridge.core.schema.DispatchCommand;
+import org.mineacademy.minebridge.core.utils.CommandParser;
 import org.mineacademy.minebridge.core.websocket.Client;
 
 @SuppressWarnings("unused")
@@ -43,6 +45,22 @@ public class CommandActionHandler implements WebSocketAware {
         }
     }
 
+    @WebSocketAction(value = "command-executed", schema = CommandExecuted.class)
+    public void commandExecuted(CommandExecuted schema) {
+        final String server = schema.getServer();
+        final String commandString = CommandParser.compileCommand(schema.getCommand_type(), schema.getArgs());
+
+        if (commandString == null || commandString.isEmpty()) {
+            return; // Ignore empty commands
+        }
+
+        if ("all".equals(server)) {
+            Platform.getServers().forEach(srv -> dispatchCommandToServer(commandString, srv));
+        } else {
+            dispatchCommandToServer(commandString, Platform.getServer(server));
+        }
+    }
+
     /**
      * Sends multiple commands to a specific server
      * 
@@ -55,5 +73,17 @@ public class CommandActionHandler implements WebSocketAware {
             msg.writeString(cmd);
             msg.sendToServer("proxy", server);
         });
+    }
+
+    /**
+     * Sends a single command to a specific server
+     * 
+     * @param command Command to dispatch
+     * @param server  The target server
+     */
+    private void dispatchCommandToServer(final String command, final FoundationServer server) {
+        final OutgoingMessage msg = new OutgoingMessage(MineBridgeProxyMessage.DISPATCH_COMMAND);
+        msg.writeString(command);
+        msg.sendToServer("proxy", server);
     }
 }
