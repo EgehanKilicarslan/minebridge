@@ -28,7 +28,7 @@
         
         <!-- Version Properties -->
         <foundation.version>LATEST</foundation.version>
-        <lombok.version>1.18.40</lombok.version>
+        <lombok.version>1.18.42</lombok.version>
         <websocket.version>1.6.0</websocket.version>
         <gson.version>2.13.1</gson.version>
         <slf4j.version>2.0.17</slf4j.version>
